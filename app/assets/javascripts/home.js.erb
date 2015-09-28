@@ -1,7 +1,23 @@
 $(document).ready(function(){
   renderBoard();
   renderPieces();
-  $('.piece').on('click', choosePiece)
+  $('.piece').on('click', function(e){
+    e.stopPropagation();
+    // $('.piece').off();
+    if ($(".selected").length == 0){
+    var piece = this;
+      $(this).parent().toggleClass("selected");
+    }
+    $('.on').on('click', function(e){
+      if ($(this).html() === ""){
+        e.stopPropagation();
+        $(this).html(piece);
+        $('.selected').html('');
+      }
+      $('.selected').toggleClass('selected');
+      piece = ''
+    });
+  });
 });
 
 function renderBoard(){
@@ -35,11 +51,14 @@ function renderPieces(){
   $('.p1-start > .on').append('<%= image_tag "yellow-burger", class:"p1 piece"%>')
 }
 
-function choosePiece(){
-  $('.on').on('click', movePiece)
-}
+// function choosePiece(){
+//
+//   $('.on').on('click', movePiece)
+//   // debugger
+// }
 
 function movePiece(){
+  debugger
   var square = this;
   var piece = $(this).html();
   $('.on').on('click', function(){

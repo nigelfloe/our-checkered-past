@@ -1,0 +1,19 @@
+.square {
+  width: 100px;
+  height: 100px;
+  position: relative;
+  float: left;
+}
+
+.row {
+  clear: both;
+  min-width: 800px;
+}
+
+.red {
+  background-color: #41a7b9;
+}
+
+.black {
+  background-color: #555;
+}

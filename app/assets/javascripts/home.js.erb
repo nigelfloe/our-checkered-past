@@ -1,6 +1,6 @@
 $(document).ready(function(){
   renderBoard();
-
+  renderPieces();
 });
 
 function renderBoard(){
@@ -27,4 +27,9 @@ function renderRow(firstColor){
     }
   }
   return row;
+}
+
+function renderPieces(){
+  $('.black-piece > .black').append('<%= image_tag "burger"%>')
+  $('.red-piece > .black').append('<%= image_tag "yellow-burger"%>')
 }

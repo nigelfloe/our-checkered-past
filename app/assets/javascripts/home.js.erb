@@ -1,11 +1,12 @@
 $(document).ready(function(){
   renderBoard();
   renderPieces();
+  // $('.piece').
 });
 
 function renderBoard(){
-  $(".red-first").html(renderRow("red"));
-  $(".black-first").html(renderRow("black"));
+  $(".even").html(renderRow("off"));
+  $(".odd").html(renderRow("on"));
   $.makeArray($(".square")).forEach(function(square, index){
     $(square).attr('id', index)
   });
@@ -17,19 +18,23 @@ function renderSquare(color){
 
 function renderRow(firstColor){
   var row = "";
-  if(firstColor === "red"){
+  if(firstColor === "off"){
     for(var i=0; i<4; i++){
-      row = row + renderSquare("red") + renderSquare("black");
+      row = row + renderSquare("off") + renderSquare("on");
     }
-  } else if(firstColor === "black"){
+  } else if(firstColor === "on"){
     for(var i=0; i<4; i++){
-      row = row + renderSquare("black") + renderSquare("red");
+      row = row + renderSquare("on") + renderSquare("off");
     }
   }
   return row;
 }
 
 function renderPieces(){
-  $('.black-piece > .black').append('<%= image_tag "burger"%>')
-  $('.red-piece > .black').append('<%= image_tag "yellow-burger"%>')
+  $('.p2-start > .on').append('<%= image_tag "burger", class:"p2 piece"%>')
+  $('.p1-start > .on').append('<%= image_tag "yellow-burger", class:"p1 piece"%>')
+}
+
+function movePiece(){
+
 }

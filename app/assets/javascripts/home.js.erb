@@ -1,24 +1,31 @@
 $(document).ready(function(){
   renderBoard();
   renderPieces();
+  movePieceListener();
+});
+
+function movePieceListener(){
   $('.piece').on('click', function(e){
     e.stopPropagation();
-    // $('.piece').off();
+    $('.piece').off();
     if ($(".selected").length == 0){
     var piece = this;
       $(this).parent().toggleClass("selected");
     }
     $('.on').on('click', function(e){
       if ($(this).html() === ""){
-        e.stopPropagation();
+        // e.stopPropagation();
         $(this).html(piece);
         $('.selected').html('');
+        $('.on').off()
+        movePieceListener()
       }
       $('.selected').toggleClass('selected');
       piece = ''
     });
   });
-});
+
+}
 
 function renderBoard(){
   $(".even").html(renderRow("off"));

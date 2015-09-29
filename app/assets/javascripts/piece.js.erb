@@ -1,0 +1,59 @@
+var Piece = function(player){
+  this.square = null;
+  this.player = player;
+  this.isKing = false;
+  Piece.all.push(this);
+}
+
+Piece.all = [];
+
+Piece.findOnClick = function(imageTag){
+  var square = $(imageTag).parent();
+  return Square.findByJSquare(square).piece;
+};
+
+Piece.prototype.goToSquare= function(newSquare){
+  this.square = newSquare;
+  this.square.piece = this;
+  this.square.jSquare().append(this.render());
+};
+
+Piece.prototype.render = function () {
+  if (this.player == 'p2'){
+    return '<%= image_tag "burger", class:"p2 piece"%>'
+  } else if (this.player == 'p1'){
+    return '<%= image_tag "yellow-burger", class:"p1 piece"%>'
+  }
+};
+
+Piece.prototype.move = function(newSquare){
+  this.toggleHighlight();
+  this.leaveSquare();
+  this.goToSquare(newSquare);
+  choosePieceListener();
+};
+
+Piece.prototype.toggleHighlight = function(){
+  this.legalMoves().forEach(function(square){
+    square.jSquare().toggleClass('highlighted');
+  });
+  this.square.jSquare().toggleClass('highlighted');
+};
+
+Piece.prototype.legalMoves = function(){
+  var moves = [];
+  var leftMove = Square.findByPosition(this.square.positionX - 1, this.square.positionY - 1);
+  var rightMove = Square.findByPosition(this.square.positionX + 1, this.square.positionY - 1);
+  if (!!leftMove && !leftMove.piece){moves.push(leftMove)};
+  if (!!rightMove && !rightMove.piece){moves.push(rightMove)};
+  return moves;
+};
+
+Piece.prototype.leaveSquare = function(){
+  this.square.jSquare().html('');
+  this.square.piece = null;
+};
+
+Piece.prototype.jumpAvailable = function(){
+
+}

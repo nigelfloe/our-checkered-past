@@ -1,79 +1,71 @@
 $(document).ready(function(){
   renderBoard();
   renderPieces();
-  movePieceListener();
+  choosePieceListener();
 });
 
-function movePieceListener(){
-  $('.piece').on('click', function(e){
-    e.stopPropagation();
-    $('.piece').off();
-    if ($(".selected").length == 0){
-    var piece = this;
-      $(this).parent().toggleClass("selected");
-    }
-    $('.on').on('click', function(e){
-      if ($(this).html() === ""){
-        // e.stopPropagation();
-        $(this).html(piece);
-        $('.selected').html('');
-        $('.on').off()
-        movePieceListener()
-      }
-      $('.selected').toggleClass('selected');
-      piece = ''
-    });
-  });
-
-}
 
 function renderBoard(){
-  $(".even").html(renderRow("off"));
-  $(".odd").html(renderRow("on"));
-  $.makeArray($(".square")).forEach(function(square, index){
-    $(square).attr('id', index)
+  $.makeArray($(".row")).forEach(function(row, y){
+    $(row).html(renderRow(row, y));
   });
 }
 
-function renderSquare(color){
-  return "<div class='" + color + " square'></div>"
-}
-
-function renderRow(firstColor){
-  var row = "";
-  if(firstColor === "off"){
+function renderRow(row, y){
+  var html = "";
+  if($(row).hasClass('even')){
     for(var i=0; i<4; i++){
-      row = row + renderSquare("off") + renderSquare("on");
+      html = html + new Square("off", 2 * i, y).render() + new Square("on", 2 * i + 1, y).render();
     }
-  } else if(firstColor === "on"){
+  } else if($(row).hasClass('odd')){
     for(var i=0; i<4; i++){
-      row = row + renderSquare("on") + renderSquare("off");
+      html = html + new Square("on", 2 * i, y).render() + new Square("off", 2 * i + 1, y).render();
     }
   }
-  return row;
+  return html;
 }
 
 function renderPieces(){
-  $('.p2-start > .on').append('<%= image_tag "burger", class:"p2 piece"%>')
-  $('.p1-start > .on').append('<%= image_tag "yellow-burger", class:"p1 piece"%>')
+  $.makeArray($('.p2-start > .on')).forEach(function(square, index){
+    new Piece('p2').goToSquare(Square.findByPosition($(square).attr('x'), $(square).attr('y')));
+  })
+  $.makeArray($('.p1-start > .on')).forEach(function(square, index){
+    new Piece('p1').goToSquare(Square.findByPosition($(square).attr('x'), $(square).attr('y')));
+  })
 }
 
-// function choosePiece(){
-//
-//   $('.on').on('click', movePiece)
-//   // debugger
-// }
+function choosePieceListener(){
+  $('.piece').on('click', function(e){
+    e.stopPropagation();
+    $('.piece').off();
 
-function movePiece(){
-  debugger
-  var square = this;
-  var piece = $(this).html();
-  $('.on').on('click', function(){
-    $(square).html('');
-    $(this).html(piece);
+    if ($(".selected").length == 0){
+      var piece = Piece.findOnClick(this);
+      piece.toggleHighlight();
+      $(this).parent().toggleClass("selected");
+    }
+    squareChoiceListener(piece);
   });
 }
 
-// function toggleSquare(){
-//
-// }
+function squareChoiceListener(piece){
+  $('.on').on('click', piece, function(e){
+    var piece = e.data;
+    e.stopPropagation();
+    $('.on').off();
+    if($(this).hasClass('selected')){
+      piece.toggleHighlight();
+      $(this).toggleClass('selected');
+      choosePieceListener();
+    } else if ($(this).hasClass("highlighted")){
+      piece.move(Square.findByJSquare($(this)));
+      $('.selected').toggleClass('selected');
+    } else if ($(this).hasClass("on")){
+      squareChoiceListener(piece);
+    }
+  });
+}
+
+function getPosition(square){
+  return square.attr('position').split(',').map(Number);
+}

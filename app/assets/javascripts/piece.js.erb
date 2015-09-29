@@ -3,7 +3,10 @@ var Piece = function(squareObject, player){
   this.position = this.square.position;
   this.player = player;
   this.isKing = false;
+  Piece.all.push(this);
 }
+
+Piece.all = [];
 
 Piece.prototype.render = function () {
   if (this.player == 'p2'){
@@ -16,6 +19,7 @@ Piece.prototype.render = function () {
 };
 
 Piece.prototype.goToSquare= function () {
+  this.square.setPiece(this);
   this.square.jSquare().append(this.render());
 };
 

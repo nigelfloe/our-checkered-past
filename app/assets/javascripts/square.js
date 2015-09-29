@@ -3,6 +3,7 @@ var Square = function(color, positionX, positionY){
   this.positionX = positionX;
   this.positionY = positionY;
   this.position = positionX + "," + positionY;
+  this.piece = null;
   Square.all.push(this);
 };
 
@@ -25,4 +26,8 @@ Square.prototype.hello = function () {
 
 Square.prototype.jSquare = function () {
   return $("[position='" + this.position + "']");
+};
+
+Square.prototype.setPiece = function(piece) {
+  this.piece = piece;
 };

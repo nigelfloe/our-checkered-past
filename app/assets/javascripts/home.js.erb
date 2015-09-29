@@ -1,46 +1,28 @@
 $(document).ready(function(){
   renderBoard();
-  setPositions();
-  createSquares();
   renderPieces();
   movePieceListener();
 });
 
-function createSquares(){
-  $.makeArray($('.square')).forEach(function(square){
-    new Square($(square).attr('position').split(',').map(Number))
-  })
-}
 
 function renderBoard(){
-  $(".even").html(renderRow("off"));
-  $(".odd").html(renderRow("on"));
+  $.makeArray($(".row")).forEach(function(row, y){
+    $(row).html(renderRow(row, y));
+  });
 }
 
-function renderRow(firstColor){
-  var row = "";
-  if(firstColor === "off"){
+function renderRow(row, y){
+  var html = "";
+  if($(row).hasClass('even')){
     for(var i=0; i<4; i++){
-      row = row + renderSquare("off") + renderSquare("on");
+      html = html + new Square("off", 2 * i, y).render() + new Square("on", 2 * i + 1, y).render();
     }
-  } else if(firstColor === "on"){
+  } else if($(row).hasClass('odd')){
     for(var i=0; i<4; i++){
-      row = row + renderSquare("on") + renderSquare("off");
+      html = html + new Square("on", 2 * i, y).render() + new Square("off", 2 * i + 1, y).render();
     }
   }
-  return row;
-}
-
-function renderSquare(color){
-  return "<div class='" + color + " square'></div>"
-}
-
-function setPositions(){
-  $.makeArray($(".row")).forEach(function(row, y){
-    $.makeArray($(".row[id='" + y + "'] > .square")).forEach(function(square, x){
-      $(square).attr('position', x + "," + y);
-    });
-  });
+  return html;
 }
 
 function renderPieces(){

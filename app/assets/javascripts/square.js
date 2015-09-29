@@ -15,6 +15,12 @@ Square.findByPosition = function(x, y){
   })[0]
 };
 
+Square.findByJSquare = function(selection){
+  return Square.all.filter(function(square){
+    return square.jSquare()[0] == selection[0];
+  })[0]
+};
+
 Square.prototype.render = function(){
   // return "<div class='" + this.color + " square' position='" + this.position + "'></div>"
   return "<div class='" + this.color + " square' x='" + this.positionX + "' y='" + this.positionY + "' position='" + this.position + "'></div>"
@@ -28,6 +34,6 @@ Square.prototype.jSquare = function () {
   return $("[position='" + this.position + "']");
 };
 
-Square.prototype.setPiece = function(piece) {
-  this.piece = piece;
-};
+// Square.prototype.setPiece = function(piece) {
+//   this.piece = piece;
+// };

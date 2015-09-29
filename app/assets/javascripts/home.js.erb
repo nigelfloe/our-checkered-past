@@ -1,7 +1,7 @@
 $(document).ready(function(){
   renderBoard();
   renderPieces();
-  movePieceListener();
+  choosePieceListener();
 });
 
 
@@ -26,36 +26,43 @@ function renderRow(row, y){
 }
 
 function renderPieces(){
-  // if($(row).hasClass('.p2-start'))
   $.makeArray($('.p2-start > .on')).forEach(function(square, index){
-    new Piece(Square.findByPosition($(square).attr('x'), $(square).attr('y')), 'p2').goToSquare();
+    new Piece('p2').goToSquare(Square.findByPosition($(square).attr('x'), $(square).attr('y')));
   })
   $.makeArray($('.p1-start > .on')).forEach(function(square, index){
-    new Piece(Square.findByPosition($(square).attr('x'), $(square).attr('y')), 'p1').goToSquare();
+    new Piece('p1').goToSquare(Square.findByPosition($(square).attr('x'), $(square).attr('y')));
   })
-  // $('.p2-start > .on').append('<%= image_tag "burger", class:"p2 piece"%>')
-  // $('.p1-start > .on').append('<%= image_tag "yellow-burger", class:"p1 piece"%>')
 }
 
-function movePieceListener(){
+function choosePieceListener(){
   $('.piece').on('click', function(e){
     e.stopPropagation();
     $('.piece').off();
+
     if ($(".selected").length == 0){
-    var piece = this;
+      var piece = Piece.findOnClick(this);
+      piece.toggleHighlight();
       $(this).parent().toggleClass("selected");
     }
-    $('.on').on('click', function(e){
-      if ($(this).html() === ""){
-        // e.stopPropagation();
-        $(this).html(piece);
-        $('.selected').html('');
-        $('.on').off()
-        movePieceListener()
-      }
+    squareChoiceListener(piece);
+  });
+}
+
+function squareChoiceListener(piece){
+  $('.on').on('click', piece, function(e){
+    var piece = e.data;
+    e.stopPropagation();
+    $('.on').off();
+    if($(this).hasClass('selected')){
+      piece.toggleHighlight();
+      $(this).toggleClass('selected');
+      choosePieceListener();
+    } else if ($(this).hasClass("highlighted")){
+      piece.move(Square.findByJSquare($(this)));
       $('.selected').toggleClass('selected');
-      piece = ''
-    });
+    } else if ($(this).hasClass("on")){
+      squareChoiceListener(piece);
+    }
   });
 }
 

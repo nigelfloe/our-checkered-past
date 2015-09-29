@@ -1,0 +1,30 @@
+var Piece = function(squareObject, player){
+  this.square = squareObject;
+  this.position = this.square.position;
+  this.player = player;
+  this.isKing = false;
+}
+
+Piece.prototype.render = function () {
+  if (this.player == 'p2'){
+    return '<%= image_tag "burger", class:"p2 piece"%>'
+  } else if (this.player == 'p1'){
+    return '<%= image_tag "yellow-burger", class:"p1 piece"%>'
+  }
+  // $('.p2-start > .on').append()
+  // $('.p1-start > .on').append('<%= image_tag "yellow-burger", class:"p1 piece"%>')
+};
+
+Piece.prototype.goToSquare= function () {
+  this.square.jSquare().append(this.render());
+};
+
+Piece.prototype.leaveSquare = function (first_argument) {
+  // body...
+};
+
+Piece.prototype.move = function (first_argument) {
+};
+
+Piece.prototype.legalMoves = function () {
+};

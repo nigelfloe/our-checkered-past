@@ -26,8 +26,15 @@ function renderRow(row, y){
 }
 
 function renderPieces(){
-  $('.p2-start > .on').append('<%= image_tag "burger", class:"p2 piece"%>')
-  $('.p1-start > .on').append('<%= image_tag "yellow-burger", class:"p1 piece"%>')
+  // if($(row).hasClass('.p2-start'))
+  $.makeArray($('.p2-start > .on')).forEach(function(square, index){
+    new Piece(Square.findByPosition($(square).attr('x'), $(square).attr('y')), 'p2').goToSquare();
+  })
+  $.makeArray($('.p1-start > .on')).forEach(function(square, index){
+    new Piece(Square.findByPosition($(square).attr('x'), $(square).attr('y')), 'p1').goToSquare();
+  })
+  // $('.p2-start > .on').append('<%= image_tag "burger", class:"p2 piece"%>')
+  // $('.p1-start > .on').append('<%= image_tag "yellow-burger", class:"p1 piece"%>')
 }
 
 function movePieceListener(){

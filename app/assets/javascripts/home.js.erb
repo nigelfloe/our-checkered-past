@@ -1,9 +1,20 @@
 $(document).ready(function(){
+  var player1 = new Player('p1')
+  var player2 = new Player('p2')
+  // debugger
   renderBoard();
-  renderPieces();
-  choosePieceListener();
+  renderPieces(player1, player2);
+  Player.opponents()
+  // player1.pieces()
+  // player2.pieces()
+  // debugger
+  playGame(player1, player2)
+
 });
 
+function playGame(player1, player2){
+  player1.takesTurn()
+}
 
 function renderBoard(){
   $.makeArray($(".row")).forEach(function(row, y){
@@ -25,46 +36,16 @@ function renderRow(row, y){
   return html;
 }
 
-function renderPieces(){
+function renderPieces(player1, player2){
   $.makeArray($('.p2-start > .on')).forEach(function(square, index){
-    new Piece('p2').goToSquare(Square.findByPosition($(square).attr('x'), $(square).attr('y')));
+    new Piece(player2).goToSquare(Square.findByPosition($(square).attr('x'), $(square).attr('y')));
   })
   $.makeArray($('.p1-start > .on')).forEach(function(square, index){
-    new Piece('p1').goToSquare(Square.findByPosition($(square).attr('x'), $(square).attr('y')));
+    new Piece(player1).goToSquare(Square.findByPosition($(square).attr('x'), $(square).attr('y')));
   })
 }
 
-function choosePieceListener(){
-  $('.piece').on('click', function(e){
-    e.stopPropagation();
-    $('.piece').off();
 
-    if ($(".selected").length == 0){
-      var piece = Piece.findOnClick(this);
-      piece.toggleHighlight();
-      $(this).parent().toggleClass("selected");
-    }
-    squareChoiceListener(piece);
-  });
-}
-
-function squareChoiceListener(piece){
-  $('.on').on('click', piece, function(e){
-    var piece = e.data;
-    e.stopPropagation();
-    $('.on').off();
-    if($(this).hasClass('selected')){
-      piece.toggleHighlight();
-      $(this).toggleClass('selected');
-      choosePieceListener();
-    } else if ($(this).hasClass("highlighted")){
-      piece.move(Square.findByJSquare($(this)));
-      $('.selected').toggleClass('selected');
-    } else if ($(this).hasClass("on")){
-      squareChoiceListener(piece);
-    }
-  });
-}
 
 function getPosition(square){
   return square.attr('position').split(',').map(Number);

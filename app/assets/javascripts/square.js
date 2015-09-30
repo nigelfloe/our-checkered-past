@@ -34,6 +34,6 @@ Square.prototype.jSquare = function () {
   return $("[position='" + this.position + "']");
 };
 
-// Square.prototype.setPiece = function(piece) {
-//   this.piece = piece;
-// };
+Square.prototype.empty = function () {
+  return !this.piece
+}

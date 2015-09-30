@@ -19,9 +19,9 @@ Piece.prototype.goToSquare= function(newSquare){
 };
 
 Piece.prototype.render = function () {
-  if (this.player == 'p2'){
+  if (this.player.name == 'p2'){
     return '<%= image_tag "burger", class:"p2 piece"%>'
-  } else if (this.player == 'p1'){
+  } else if (this.player.name == 'p1'){
     return '<%= image_tag "yellow-burger", class:"p1 piece"%>'
   }
 };
@@ -29,9 +29,17 @@ Piece.prototype.render = function () {
 Piece.prototype.move = function(newSquare){
   this.toggleHighlight();
   this.leaveSquare();
+  this.capturePiece(newSquare);
   this.goToSquare(newSquare);
-  choosePieceListener();
 };
+
+Piece.prototype.capturePiece = function(newSquare){
+  if (newSquare == this.jumpLeft()){
+    this.left().piece.leaveSquare()
+  } else if (newSquare == this.jumpRight()){
+    this.right().piece.leaveSquare()
+  }
+}
 
 Piece.prototype.toggleHighlight = function(){
   this.legalMoves().forEach(function(square){
@@ -42,18 +50,65 @@ Piece.prototype.toggleHighlight = function(){
 
 Piece.prototype.legalMoves = function(){
   var moves = [];
-  var leftMove = Square.findByPosition(this.square.positionX - 1, this.square.positionY - 1);
-  var rightMove = Square.findByPosition(this.square.positionX + 1, this.square.positionY - 1);
-  if (!!leftMove && !leftMove.piece){moves.push(leftMove)};
-  if (!!rightMove && !rightMove.piece){moves.push(rightMove)};
+  //Does the player have any pieces with jump available?
+  //If so, this piece has no legal moves
+  if (this.jumpsAvailable()){
+    moves = this.jumpsAvailable()
+  }else{
+    if (!!this.left() && this.left().empty()) {moves.push(this.left())};
+    if (!!this.right() && this.right().empty()) {moves.push(this.right())};
+  }
   return moves;
 };
+
+//left and right determined by P1 perspective
+Piece.prototype.left = function(){
+  if (this.player.name == "p1"){
+    return Square.findByPosition(this.square.positionX - 1, this.square.positionY - 1);
+  } else if (this.player.name == "p2"){
+    return Square.findByPosition(this.square.positionX - 1, this.square.positionY + 1)
+  }
+};
+
+Piece.prototype.jumpLeft = function(){
+  if (this.player.name == "p1"){
+    return Square.findByPosition(this.square.positionX - 2, this.square.positionY - 2);
+  } else if (this.player.name == "p2"){
+    return Square.findByPosition(this.square.positionX - 2, this.square.positionY + 2)
+  }
+};
+
+//left and right determined by P1 perspective
+Piece.prototype.right = function(){
+  if (this.player.name == "p1"){
+    return Square.findByPosition(this.square.positionX + 1, this.square.positionY - 1)
+  } else if (this.player.name == "p2"){
+    return Square.findByPosition(this.square.positionX + 1, this.square.positionY + 1)
+  }
+}
+
+Piece.prototype.jumpRight = function(){
+  if (this.player.name == "p1"){
+    return Square.findByPosition(this.square.positionX + 2, this.square.positionY - 2)
+  } else if (this.player.name == "p2"){
+    return Square.findByPosition(this.square.positionX + 2, this.square.positionY + 2)
+  }
+}
+
 
 Piece.prototype.leaveSquare = function(){
   this.square.jSquare().html('');
   this.square.piece = null;
 };
 
-Piece.prototype.jumpAvailable = function(){
-
+Piece.prototype.jumpsAvailable = function(){
+  var jumps = []
+  if (!this.left().empty() && (this.left().piece.player == this.player.opponent) && this.jumpLeft().empty()){
+    jumps.push(this.jumpLeft())
+  } else if (!this.right().empty() && (this.right().piece.player == this.player.opponent) && this.jumpRight().empty()){
+    jumps.push(this.jumpRight())
+  } else {
+    return false
+  }
+  return jumps
 }

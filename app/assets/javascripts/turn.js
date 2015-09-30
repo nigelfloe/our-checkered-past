@@ -1,7 +1,7 @@
 var Turn = function(player){
   // debugger
-  this.player = player
-  this.choosePieceListener()
+  this.player = player;
+  this.choosePieceListener();
 }
 
 Turn.prototype.choosePieceListener = function(){
@@ -33,11 +33,16 @@ Turn.prototype.squareChoiceListener = function(piece, turn){
       $(this).toggleClass('selected');
       piece.player.takesTurn();
     } else if ($(this).hasClass("highlighted")){
-      piece.move(Square.findByJSquare($(this)));
+      piece.jumpOrSlide(Square.findByJSquare($(this)));
       $('.selected').toggleClass('selected');
+      turn.checkWin();
       piece.player.opponent.takesTurn();
     } else if ($(this).hasClass("on")){
-      turn.squareChoiceListener(piece);
+      turn.squareChoiceListener(piece, turn);
     }
   });
 }
+
+Turn.prototype.checkWin = function () {
+  return this.player.opponent.pieces().length === 0
+};

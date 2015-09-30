@@ -26,18 +26,45 @@ Piece.prototype.render = function () {
   }
 };
 
-Piece.prototype.move = function(newSquare){
-  this.toggleHighlight();
+Piece.prototype.jumpOrSlide = function(newSquare){
+  if(newSquare == this.jumpLeft() || newSquare == this.jumpRight()){
+    this.toggleHighlight();
+    this.move(newSquare);
+    this.doubleJumpHighlight();
+    this.jumpAgain(newSquare);
+  } else {
+    this.toggleHighlight();
+    this.move(newSquare);
+  }
+};
+
+Piece.prototype.move = function(newSquare) {
   this.leaveSquare();
   this.capturePiece(newSquare);
   this.goToSquare(newSquare);
 };
 
+Piece.prototype.jumpAgain = function (newSquare) {
+  this.square.jSquare().on('click', this, function(e){
+    var piece = e.data;
+    piece.square.jSquare().off();
+    $('.selected').toggleClass("selected");
+    piece.player.opponent.takesTurn();
+  });
+  $('.highlighted').on('click', this, function(e){
+    $('.highlighted').off();
+    var piece = e.data;
+    var square = Square.findByJSquare($(this));
+    piece.move(square);
+    $('.highlighted').toggleClass('highlighted');
+  })
+};
+
 Piece.prototype.capturePiece = function(newSquare){
   if (newSquare == this.jumpLeft()){
-    this.left().piece.leaveSquare()
+    this.left().piece.die();
   } else if (newSquare == this.jumpRight()){
-    this.right().piece.leaveSquare()
+    this.right().piece.die();
   }
 }
 
@@ -48,18 +75,29 @@ Piece.prototype.toggleHighlight = function(){
   this.square.jSquare().toggleClass('highlighted');
 };
 
+Piece.prototype.doubleJumpHighlight = function(){
+  if(this.jumpsAvailable()){
+    this.jumpsAvailable().forEach(function(square){
+      square.jSquare().toggleClass('highlighted');
+    });
+    this.square.jSquare().toggleClass('highlighted');
+  }
+};
+
 Piece.prototype.legalMoves = function(){
   var moves = [];
   //Does the player have any pieces with jump available?
   //If so, this piece has no legal moves
   if (this.jumpsAvailable()){
-    moves = this.jumpsAvailable()
+    moves = this.jumpsAvailable();
+
   }else{
     if (!!this.left() && this.left().empty()) {moves.push(this.left())};
     if (!!this.right() && this.right().empty()) {moves.push(this.right())};
   }
   return moves;
 };
+
 
 //left and right determined by P1 perspective
 Piece.prototype.left = function(){
@@ -101,12 +139,23 @@ Piece.prototype.leaveSquare = function(){
   this.square.piece = null;
 };
 
+Piece.prototype.leaveGame = function() {
+  var index = Piece.all.indexOf(this);
+  Piece.all.splice(index, 1);
+};
+
+Piece.prototype.die = function() {
+  this.leaveSquare();
+  this.leaveGame();
+};
+
 Piece.prototype.jumpsAvailable = function(){
   var jumps = []
-  if (!this.left().empty() && (this.left().piece.player == this.player.opponent) && this.jumpLeft().empty()){
-    jumps.push(this.jumpLeft())
-  } else if (!this.right().empty() && (this.right().piece.player == this.player.opponent) && this.jumpRight().empty()){
-    jumps.push(this.jumpRight())
+  if (this.left() && !this.left().empty() && (this.left().piece.player == this.player.opponent) && this.jumpLeft() && this.jumpLeft().empty()){
+    jumps.push(this.jumpLeft());
+
+  } else if (this.right() && !this.right().empty() && (this.right().piece.player == this.player.opponent) && this.jumpRight() && this.jumpRight().empty()){
+    jumps.push(this.jumpRight());
   } else {
     return false
   }

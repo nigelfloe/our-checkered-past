@@ -1,7 +1,7 @@
 var Player = function(name){
   this.name = name
-  Player.all.push(this)
   this.opponent = null
+  Player.all.push(this)
 }
 
 Player.all = []
@@ -14,8 +14,6 @@ Player.opponents = function(){
 
 Player.prototype.takesTurn = function(){
   new Turn(this)
-  // choosePieceListener()
-  // squareChoiceListener()
 }
 
 Player.prototype.pieces = function(){
@@ -23,38 +21,3 @@ Player.prototype.pieces = function(){
     return piece.player == this
   }.bind(this))
 }
-
-
-
-//
-// function choosePieceListener(player){
-//   $('.piece').on('click', function(e){
-//     e.stopPropagation();
-//     $('.piece').off();
-//
-//     if ($(".selected").length == 0){
-//       var piece = Piece.findOnClick(this);
-//       piece.toggleHighlight();
-//       $(this).parent().toggleClass("selected");
-//     }
-//     squareChoiceListener(piece);
-//   });
-// }
-//
-// function squareChoiceListener(piece){
-//   $('.on').on('click', piece, function(e){
-//     var piece = e.data;
-//     e.stopPropagation();
-//     $('.on').off();
-//     if($(this).hasClass('selected')){
-//       piece.toggleHighlight();
-//       $(this).toggleClass('selected');
-//       choosePieceListener();
-//     } else if ($(this).hasClass("highlighted")){
-//       piece.move(Square.findByJSquare($(this)));
-//       $('.selected').toggleClass('selected');
-//     } else if ($(this).hasClass("on")){
-//       squareChoiceListener(piece);
-//     }
-//   });
-// }

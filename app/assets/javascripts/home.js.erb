@@ -1,27 +1,15 @@
-//jump not finding both jumps
-//double jump broken after arrested double jump
-
 $(document).ready(function(){
   var player1 = new Player('p1')
   var player2 = new Player('p2')
-  // debugger
   renderBoard();
   renderPieces(player1, player2);
   Player.opponents()
-
-  // while(!checkWin()){
-  //   playGame(player1, player2)
-  // }
   player1.takesTurn();
 });
 
 function playGame(player1, player2){
   player1.takesTurn();
 }
-
-// function checkWin(player){
-//   return player.opponent.pieces.empty()
-// }
 
 function renderBoard(){
   $.makeArray($(".row")).forEach(function(row, y){

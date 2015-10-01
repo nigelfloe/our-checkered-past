@@ -1,8 +1,12 @@
 var Turn = function(player){
+  updateInfoPanel(player);
   this.player = player;
   this.checkStalemate();
   this.choosePieceListener();
+  Turn.all.push(this);
 }
+
+Turn.all = [];
 
 Turn.prototype.checkStalemate = function(){
   var piecesWithMoves = this.player.pieces().filter(function(piece){
@@ -21,6 +25,7 @@ Turn.prototype.choosePieceListener = function(){
 
     if ($(".highlighted").length == 0){
       var piece = Piece.findOnClick(this);
+      piece.square.jSquare().toggleClass('selected');
       piece.toggleHighlight();
       turn.squareChoiceListener(piece, turn);
     }
@@ -33,9 +38,11 @@ Turn.prototype.squareChoiceListener = function(piece, turn){
     e.stopPropagation();
     var piece = e.data.piece;
     var turn = e.data.turn;
+    $('.selected').toggleClass('selected');
     if(Square.findByJSquare($(this)).piece == piece){
       piece.toggleHighlight();
-      piece.player.takesTurn();
+      // piece.player.takesTurn();
+      turn.choosePieceListener();
     } else {
       piece.jumpOrSlide(Square.findByJSquare($(this)));
       turn.checkWin();

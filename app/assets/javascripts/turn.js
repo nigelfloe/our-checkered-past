@@ -13,7 +13,7 @@ Turn.prototype.checkStalemate = function(){
     return piece.legalMoves().length > 0
   })
   if(piecesWithMoves.length == 0){
-    alert("Draw");
+    // alert("Draw");
   }
 }
 

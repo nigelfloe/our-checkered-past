@@ -1,10 +1,12 @@
 $(document).ready(function(){
-  var player1 = new Player('p1')
-  var player2 = new Player('p2')
-  renderBoard();
-  renderPieces(player1, player2);
-  Player.opponents()
-  player1.takesTurn();
+  if (window.location.pathname == '/'){
+    var player1 = new Player('p1')
+    var player2 = new Player('p2')
+    renderBoard();
+    renderPieces(player1, player2);
+    Player.opponents()
+    player1.takesTurn();
+  }
 });
 
 function playGame(player1, player2){

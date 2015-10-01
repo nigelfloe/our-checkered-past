@@ -6,84 +6,58 @@ var Piece = function(player){
   Piece.all.push(this);
 }
 
-Piece.prototype.slides = function(){
-  this.upLeft = Square.findByPosition(this.square.positionX - 1, this.square.positionY - 1);
-  this.upRight = Square.findByPosition(this.square.positionX + 1, this.square.positionY - 1);
-  this.downLeft = Square.findByPosition(this.square.positionX - 1, this.square.positionY + 1);
-  this.downRight = Square.findByPosition(this.square.positionX + 1, this.square.positionY + 1);
-}
-
-Piece.prototype.jumps = function(){
-  this.jumpUpLeft = Square.findByPosition(this.square.positionX - 2, this.square.positionY - 2);
-  this.jumpUpRight = Square.findByPosition(this.square.positionX + 2, this.square.positionY - 2);
-  this.jumpDownLeft = Square.findByPosition(this.square.positionX - 2, this.square.positionY + 2);
-  this.jumpDownRight = Square.findByPosition(this.square.positionX + 2, this.square.positionY + 2);
-}
-
-Piece.prototype.legalMoves = function(){
-  var moves = [];
-  //Does the player have any pieces with jump available?
-  //If so, this piece has no legal moves
-  if(this.jumpsAvailable().length > 0){
-    moves = this.jumpsAvailable();
-  } else {
-    if(this.player.name == 'p1' || this.isKing){
-      if(!!this.upLeft && this.upLeft.empty()) {
-        moves.push(this.upLeft);
-      }
-      if(!!this.upRight && this.upRight.empty()) {
-        moves.push(this.upRight);
-      }
-    }
-
-    if(this.player.name == 'p2' || this.isKing){
-      if(!!this.downLeft && this.downLeft.empty()) {
-        moves.push(this.downLeft);
-      }
-      if(!!this.downRight && this.downRight.empty()) {
-        moves.push(this.downRight);
-      }
-    }
-  }
-  return moves;
-};
-
-Piece.prototype.jumpsAvailable = function(){
-  var jumps = []
-  if(this.player.name == 'p1' || this.isKing){
-    if(this.upLeft && !this.upLeft.empty() && (this.upLeft.piece.player == this.player.opponent) && this.jumpUpLeft && this.jumpUpLeft.empty()){
-      jumps.push(this.jumpUpLeft);
-    }
-    if (this.upRight && !this.upRight.empty() && (this.upRight.piece.player == this.player.opponent) && this.jumpUpRight && this.jumpUpRight.empty()){
-      jumps.push(this.jumpUpRight);
-    }
-  }
-  if(this.player.name == 'p2' || this.isKing){
-    if(this.downLeft && !this.downLeft.empty() && (this.downLeft.piece.player == this.player.opponent) && this.jumpDownLeft && this.jumpDownLeft.empty()){
-      jumps.push(this.jumpDownLeft);
-    }
-    if (this.downRight && !this.downRight.empty() && (this.downRight.piece.player == this.player.opponent) && this.jumpDownRight && this.jumpDownRight.empty()){
-      jumps.push(this.jumpDownRight);
-    }
-  }
-  return jumps;
-}
-
-Piece.prototype.toggleHighlight = function(){
-  this.slides();
-  this.jumps();
-  this.legalMoves().forEach(function(square){
-    square.jSquare().toggleClass('highlighted');
-  });
-  this.square.jSquare().toggleClass('highlighted');
-};
-
-
 Piece.all = [];
 
 Piece.findOnClick = function(imageTag){
   var square = $(imageTag).parent();
   return Square.findByJSquare(square).piece;
+};
+
+Piece.prototype.setSlides = function(){
+  this.slides = [];
+  if(this.player.name == 'p1' || this.isKing){
+    this.slides.push(Square.findByPosition(this.square.positionX - 1, this.square.positionY - 1));
+    this.slides.push(Square.findByPosition(this.square.positionX + 1, this.square.positionY - 1));
+  }
+  if(this.player.name == 'p2' || this.isKing){
+    this.slides.push(Square.findByPosition(this.square.positionX - 1, this.square.positionY + 1));
+    this.slides.push(Square.findByPosition(this.square.positionX + 1, this.square.positionY + 1));
+  }
+}
+
+Piece.prototype.setJumps = function(){
+  this.jumps = [];
+  if(this.player.name == 'p1' || this.isKing){
+    this.jumps.push(Square.findByPosition(this.square.positionX - 2, this.square.positionY - 2));
+    this.jumps.push(Square.findByPosition(this.square.positionX + 2, this.square.positionY - 2));
+  }
+  if(this.player.name == 'p2' || this.isKing){
+    this.jumps.push(Square.findByPosition(this.square.positionX - 2, this.square.positionY + 2));
+    this.jumps.push(Square.findByPosition(this.square.positionX + 2, this.square.positionY + 2));
+  }
+}
+
+Piece.prototype.legalMoves = function(){
+  if(this.jumpsAvailable().length > 0){
+    return this.jumpsAvailable();
+  } else {
+    return this.slides.filter(function(slide){
+      return !!slide && slide.empty();
+    })
+  }
+};
+
+Piece.prototype.jumpsAvailable = function(){
+  return this.jumps.filter(function(jump, index){
+    return this.slides[index] && !this.slides[index].empty() && (this.slides[index].piece.player == this.player.opponent) && jump && jump.empty()
+  }.bind(this))
+}
+
+Piece.prototype.toggleHighlight = function(){
+  this.legalMoves().forEach(function(square){
+    square.jSquare().toggleClass('highlighted');
+  });
+  this.square.jSquare().toggleClass('highlighted');
 };
 
 Piece.prototype.kingMe = function(){
@@ -94,8 +68,8 @@ Piece.prototype.goToSquare = function(newSquare){
   this.square = newSquare;
   this.square.piece = this;
   this.square.jSquare().append(this.render());
-  this.jumps();
-  this.slides();
+  this.setSlides();
+  this.setJumps();
 };
 
 Piece.prototype.render = function(){
@@ -116,63 +90,16 @@ Piece.prototype.render = function(){
 };
 
 Piece.prototype.jumpOrSlide = function(newSquare){
-  if(this.jumpsAvailable().indexOf(newSquare) >= 0){
     this.toggleHighlight();
+  if(this.jumps.indexOf(newSquare) >= 0){
+    this.capturePiece(newSquare);
     this.move(newSquare);
-    // this.jumps();
     this.doubleJumpHighlight();
-    this.jumpAgain(newSquare);
+    this.jumpAgain();
   } else {
-    this.toggleHighlight();
     this.move(newSquare);
   }
 };
-
-Piece.prototype.move = function(newSquare) {
-  this.leaveSquare();
-  this.capturePiece(newSquare);
-  // debugger;
-  if (newSquare.positionY == this.kingRow){
-    this.kingMe();
-  }
-
-  this.goToSquare(newSquare);
-};
-
-Piece.prototype.jumpAgain = function(newSquare) {
-  this.square.jSquare().on('click', this, function(e){
-    var piece = e.data;
-    piece.square.jSquare().off();
-    piece.player.opponent.takesTurn();
-  });
-  $('.highlighted').on('click', this, function(e){
-    $('.highlighted').off();
-    var piece = e.data;
-    var square = Square.findByJSquare($(this));
-    piece.move(square);
-    $('.highlighted').toggleClass('highlighted');
-  })
-};
-
-Piece.prototype.capturePiece = function(newSquare){
-  if(this.player.name == 'p1' || this.isKing){
-    if (newSquare == this.jumpUpLeft){
-      this.upLeft.piece.die();
-    }
-    if (newSquare == this.jumpUpRight){
-      this.upRight.piece.die();
-    }
-  }
-  if(this.player.name == 'p2' || this.isKing){
-    if (newSquare == this.jumpDownLeft){
-      this.downLeft.piece.die();
-    }
-    if (newSquare == this.jumpDownRight){
-      this.downRight.piece.die();
-    }
-  }
-};
-
 
 Piece.prototype.doubleJumpHighlight = function(){
   if(this.jumpsAvailable().length > 0){
@@ -183,8 +110,35 @@ Piece.prototype.doubleJumpHighlight = function(){
   }
 };
 
+Piece.prototype.jumpAgain = function() {
+  this.square.jSquare().on('click', this, function(e){
+    var piece = e.data;
+    piece.square.jSquare().off();
+    piece.player.opponent.takesTurn();
+  });
+  $('.highlighted').on('click', this, function(e){
+    $('.highlighted').off();
+    var piece = e.data;
+    var square = Square.findByJSquare($(this));
+    piece.jumpOrSlide(square);
+  })
+};
+
+Piece.prototype.move = function(newSquare) {
+  this.leaveSquare();
+  if (newSquare.positionY == this.kingRow){
+    this.kingMe();
+  }
+  this.goToSquare(newSquare);
+};
 
 
+Piece.prototype.capturePiece = function(newSquare){
+  var index = this.jumps.indexOf(newSquare);
+  if (index >= 0){
+    this.slides[index].piece.die()
+  }
+};
 
 Piece.prototype.leaveSquare = function(){
   this.square.jSquare().html('');

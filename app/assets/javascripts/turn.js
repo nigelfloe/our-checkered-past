@@ -5,36 +5,31 @@ var Turn = function(player){
 
 Turn.prototype.choosePieceListener = function(){
   $("." + this.player.name + ".piece").on('click', this, function(e){
-    var turn = e.data
-    e.stopPropagation();
     $('.piece').off();
+    e.stopPropagation();
+    var turn = e.data
 
-    if ($(".selected").length == 0){
+    if ($(".highlighted").length == 0){
       var piece = Piece.findOnClick(this);
       piece.toggleHighlight();
-      $(this).parent().toggleClass("selected");
       turn.squareChoiceListener(piece, turn);
     }
   });
 }
 
 Turn.prototype.squareChoiceListener = function(piece, turn){
-  $('.on').on('click', {piece: piece, turn: turn}, function(e){
+  $('.highlighted').on('click', {piece: piece, turn: turn}, function(e){
+    $('.highlighted').off();
+    e.stopPropagation();
     var piece = e.data.piece;
     var turn = e.data.turn;
-    e.stopPropagation();
-    $('.on').off();
-    if($(this).hasClass('selected')){
+    if(Square.findByJSquare($(this)).piece == piece){
       piece.toggleHighlight();
-      $(this).toggleClass('selected');
       piece.player.takesTurn();
-    } else if ($(this).hasClass("highlighted")){
+    } else {
       piece.jumpOrSlide(Square.findByJSquare($(this)));
-      $('.selected').toggleClass('selected');
       turn.checkWin();
       piece.player.opponent.takesTurn();
-    } else if ($(this).hasClass("on")){
-      turn.squareChoiceListener(piece, turn);
     }
   });
 }

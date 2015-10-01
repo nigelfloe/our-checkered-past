@@ -38,13 +38,21 @@ Piece.prototype.setJumps = function(){
 }
 
 Piece.prototype.legalMoves = function(){
-  if(this.jumpsAvailable().length > 0){
+  if (Piece.piecesWithJumps(this.player).length > 0 && Piece.piecesWithJumps(this.player).indexOf(this) < 0){
+    return []
+  } else if(this.jumpsAvailable().length > 0){
     return this.jumpsAvailable();
   } else {
     return this.slides.filter(function(slide){
       return !!slide && slide.empty();
-    })
+    });
   }
+};
+
+Piece.piecesWithJumps = function(player){
+  return Piece.all.filter(function(piece){
+    return piece.jumpsAvailable().length > 0 && player == piece.player;
+  });
 };
 
 Piece.prototype.jumpsAvailable = function(){

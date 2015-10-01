@@ -1,6 +1,16 @@
 var Turn = function(player){
   this.player = player;
+  this.checkStalemate();
   this.choosePieceListener();
+}
+
+Turn.prototype.checkStalemate = function(){
+  var piecesWithMoves = this.player.pieces().filter(function(piece){
+    return piece.legalMoves().length > 0
+  })
+  if(piecesWithMoves.length == 0){
+    alert("Draw");
+  }
 }
 
 Turn.prototype.choosePieceListener = function(){

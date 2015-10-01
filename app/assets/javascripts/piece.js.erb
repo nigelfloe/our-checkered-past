@@ -81,18 +81,18 @@ Piece.prototype.goToSquare = function(newSquare){
 };
 
 Piece.prototype.render = function(){
-  if (this.player.name == 'p2'){
-    if (this.isKing){
-      return '<%= image_tag "white-burger-king", class:"p2 piece king" %>'
-    } else {
-      return '<%= image_tag "white-burger", class:"p2 piece"%>'
-    }
-  }
   if (this.player.name == 'p1'){
     if (this.isKing){
-      return '<%= image_tag "yellow-burger-king", class:"p1 piece king" %>'
+      return '<%= image_tag "king-burger-1", class:"p1 piece king" %>'
     } else {
-      return '<%= image_tag "yellow-burger", class:"p1 piece"%>'
+      return '<%= image_tag "burger-1", class:"p1 piece"%>'
+    }
+  }
+  if (this.player.name == 'p2'){
+    if (this.isKing){
+      return '<%= image_tag "king-burger-2", class:"p2 piece king" %>'
+    } else {
+      return '<%= image_tag "burger-2", class:"p2 piece"%>'
     }
   }
 };

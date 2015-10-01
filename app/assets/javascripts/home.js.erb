@@ -45,3 +45,11 @@ function renderPieces(player1, player2){
 function getPosition(square){
   return square.attr('position').split(',').map(Number);
 }
+
+function updateInfoPanel(player){
+  $('.' + player.name + '-score').html(player.pieces().length);
+  $('.' + player.opponent.name + '-score').html(player.opponent.pieces().length);
+  $('.' + player.name + '-panel').toggleClass('turn-marker');
+  $('.' + player.opponent.name + '-panel').toggleClass('turn-marker');
+  $('.turn-count').html(Turn.all.length)
+}

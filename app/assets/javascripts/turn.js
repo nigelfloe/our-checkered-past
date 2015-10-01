@@ -1,14 +1,11 @@
 var Turn = function(player){
-  // debugger
   this.player = player;
   this.choosePieceListener();
 }
 
 Turn.prototype.choosePieceListener = function(){
-  // debugger
   $("." + this.player.name + ".piece").on('click', this, function(e){
     var turn = e.data
-    // debugger
     e.stopPropagation();
     $('.piece').off();
 
@@ -16,14 +13,13 @@ Turn.prototype.choosePieceListener = function(){
       var piece = Piece.findOnClick(this);
       piece.toggleHighlight();
       $(this).parent().toggleClass("selected");
+      turn.squareChoiceListener(piece, turn);
     }
-    turn.squareChoiceListener(piece, turn);
   });
 }
 
 Turn.prototype.squareChoiceListener = function(piece, turn){
   $('.on').on('click', {piece: piece, turn: turn}, function(e){
-    // debugger
     var piece = e.data.piece;
     var turn = e.data.turn;
     e.stopPropagation();
@@ -44,5 +40,7 @@ Turn.prototype.squareChoiceListener = function(piece, turn){
 }
 
 Turn.prototype.checkWin = function () {
-  return this.player.opponent.pieces().length === 0
+  if(this.player.opponent.pieces().length === 0){
+    alert('YOU WON');
+  }
 };

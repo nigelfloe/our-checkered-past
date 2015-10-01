@@ -2,8 +2,82 @@ var Piece = function(player){
   this.square = null;
   this.player = player;
   this.isKing = false;
+  this.kingRow = (player.name == 'p1' ? 0 : 7);
   Piece.all.push(this);
 }
+
+Piece.prototype.slides = function(){
+  this.upLeft = Square.findByPosition(this.square.positionX - 1, this.square.positionY - 1);
+  this.upRight = Square.findByPosition(this.square.positionX + 1, this.square.positionY - 1);
+  this.downLeft = Square.findByPosition(this.square.positionX - 1, this.square.positionY + 1);
+  this.downRight = Square.findByPosition(this.square.positionX + 1, this.square.positionY + 1);
+}
+
+Piece.prototype.jumps = function(){
+  this.jumpUpLeft = Square.findByPosition(this.square.positionX - 2, this.square.positionY - 2);
+  this.jumpUpRight = Square.findByPosition(this.square.positionX + 2, this.square.positionY - 2);
+  this.jumpDownLeft = Square.findByPosition(this.square.positionX - 2, this.square.positionY + 2);
+  this.jumpDownRight = Square.findByPosition(this.square.positionX + 2, this.square.positionY + 2);
+}
+
+Piece.prototype.legalMoves = function(){
+  var moves = [];
+  //Does the player have any pieces with jump available?
+  //If so, this piece has no legal moves
+  if(this.jumpsAvailable().length > 0){
+    moves = this.jumpsAvailable();
+  } else {
+    if(this.player.name == 'p1' || this.isKing){
+      if(!!this.upLeft && this.upLeft.empty()) {
+        moves.push(this.upLeft);
+      }
+      if(!!this.upRight && this.upRight.empty()) {
+        moves.push(this.upRight);
+      }
+    }
+
+    if(this.player.name == 'p2' || this.isKing){
+      if(!!this.downLeft && this.downLeft.empty()) {
+        moves.push(this.downLeft);
+      }
+      if(!!this.downRight && this.downRight.empty()) {
+        moves.push(this.downRight);
+      }
+    }
+  }
+  return moves;
+};
+
+Piece.prototype.jumpsAvailable = function(){
+  var jumps = []
+  if(this.player.name == 'p1' || this.isKing){
+    if(this.upLeft && !this.upLeft.empty() && (this.upLeft.piece.player == this.player.opponent) && this.jumpUpLeft && this.jumpUpLeft.empty()){
+      jumps.push(this.jumpUpLeft);
+    }
+    if (this.upRight && !this.upRight.empty() && (this.upRight.piece.player == this.player.opponent) && this.jumpUpRight && this.jumpUpRight.empty()){
+      jumps.push(this.jumpUpRight);
+    }
+  }
+  if(this.player.name == 'p2' || this.isKing){
+    if(this.downLeft && !this.downLeft.empty() && (this.downLeft.piece.player == this.player.opponent) && this.jumpDownLeft && this.jumpDownLeft.empty()){
+      jumps.push(this.jumpDownLeft);
+    }
+    if (this.downRight && !this.downRight.empty() && (this.downRight.piece.player == this.player.opponent) && this.jumpDownRight && this.jumpDownRight.empty()){
+      jumps.push(this.jumpDownRight);
+    }
+  }
+  return jumps;
+}
+
+Piece.prototype.toggleHighlight = function(){
+  this.slides();
+  this.jumps();
+  this.legalMoves().forEach(function(square){
+    square.jSquare().toggleClass('highlighted');
+  });
+  this.square.jSquare().toggleClass('highlighted');
+};
+
 
 Piece.all = [];
 
@@ -12,24 +86,40 @@ Piece.findOnClick = function(imageTag){
   return Square.findByJSquare(square).piece;
 };
 
-Piece.prototype.goToSquare= function(newSquare){
+Piece.prototype.kingMe = function(){
+  this.isKing = true;
+}
+
+Piece.prototype.goToSquare = function(newSquare){
   this.square = newSquare;
   this.square.piece = this;
   this.square.jSquare().append(this.render());
+  this.jumps();
+  this.slides();
 };
 
-Piece.prototype.render = function () {
+Piece.prototype.render = function(){
   if (this.player.name == 'p2'){
-    return '<%= image_tag "burger", class:"p2 piece"%>'
-  } else if (this.player.name == 'p1'){
-    return '<%= image_tag "yellow-burger", class:"p1 piece"%>'
+    if (this.isKing){
+      return '<%= image_tag "white-burger-king", class:"p2 piece king" %>'
+    } else {
+      return '<%= image_tag "white-burger", class:"p2 piece"%>'
+    }
+  }
+  if (this.player.name == 'p1'){
+    if (this.isKing){
+      return '<%= image_tag "yellow-burger-king", class:"p1 piece king" %>'
+    } else {
+      return '<%= image_tag "yellow-burger", class:"p1 piece"%>'
+    }
   }
 };
 
 Piece.prototype.jumpOrSlide = function(newSquare){
-  if(newSquare == this.jumpLeft() || newSquare == this.jumpRight()){
+  if(this.jumpsAvailable().indexOf(newSquare) >= 0){
     this.toggleHighlight();
     this.move(newSquare);
+    // this.jumps();
     this.doubleJumpHighlight();
     this.jumpAgain(newSquare);
   } else {
@@ -41,14 +131,18 @@ Piece.prototype.jumpOrSlide = function(newSquare){
 Piece.prototype.move = function(newSquare) {
   this.leaveSquare();
   this.capturePiece(newSquare);
+  // debugger;
+  if (newSquare.positionY == this.kingRow){
+    this.kingMe();
+  }
+
   this.goToSquare(newSquare);
 };
 
-Piece.prototype.jumpAgain = function (newSquare) {
+Piece.prototype.jumpAgain = function(newSquare) {
   this.square.jSquare().on('click', this, function(e){
     var piece = e.data;
     piece.square.jSquare().off();
-    $('.selected').toggleClass("selected");
     piece.player.opponent.takesTurn();
   });
   $('.highlighted').on('click', this, function(e){
@@ -61,22 +155,27 @@ Piece.prototype.jumpAgain = function (newSquare) {
 };
 
 Piece.prototype.capturePiece = function(newSquare){
-  if (newSquare == this.jumpLeft()){
-    this.left().piece.die();
-  } else if (newSquare == this.jumpRight()){
-    this.right().piece.die();
+  if(this.player.name == 'p1' || this.isKing){
+    if (newSquare == this.jumpUpLeft){
+      this.upLeft.piece.die();
+    }
+    if (newSquare == this.jumpUpRight){
+      this.upRight.piece.die();
+    }
   }
-}
-
-Piece.prototype.toggleHighlight = function(){
-  this.legalMoves().forEach(function(square){
-    square.jSquare().toggleClass('highlighted');
-  });
-  this.square.jSquare().toggleClass('highlighted');
+  if(this.player.name == 'p2' || this.isKing){
+    if (newSquare == this.jumpDownLeft){
+      this.downLeft.piece.die();
+    }
+    if (newSquare == this.jumpDownRight){
+      this.downRight.piece.die();
+    }
+  }
 };
 
+
 Piece.prototype.doubleJumpHighlight = function(){
-  if(this.jumpsAvailable()){
+  if(this.jumpsAvailable().length > 0){
     this.jumpsAvailable().forEach(function(square){
       square.jSquare().toggleClass('highlighted');
     });
@@ -84,54 +183,7 @@ Piece.prototype.doubleJumpHighlight = function(){
   }
 };
 
-Piece.prototype.legalMoves = function(){
-  var moves = [];
-  //Does the player have any pieces with jump available?
-  //If so, this piece has no legal moves
-  if (this.jumpsAvailable()){
-    moves = this.jumpsAvailable();
 
-  }else{
-    if (!!this.left() && this.left().empty()) {moves.push(this.left())};
-    if (!!this.right() && this.right().empty()) {moves.push(this.right())};
-  }
-  return moves;
-};
-
-
-//left and right determined by P1 perspective
-Piece.prototype.left = function(){
-  if (this.player.name == "p1"){
-    return Square.findByPosition(this.square.positionX - 1, this.square.positionY - 1);
-  } else if (this.player.name == "p2"){
-    return Square.findByPosition(this.square.positionX - 1, this.square.positionY + 1)
-  }
-};
-
-Piece.prototype.jumpLeft = function(){
-  if (this.player.name == "p1"){
-    return Square.findByPosition(this.square.positionX - 2, this.square.positionY - 2);
-  } else if (this.player.name == "p2"){
-    return Square.findByPosition(this.square.positionX - 2, this.square.positionY + 2)
-  }
-};
-
-//left and right determined by P1 perspective
-Piece.prototype.right = function(){
-  if (this.player.name == "p1"){
-    return Square.findByPosition(this.square.positionX + 1, this.square.positionY - 1)
-  } else if (this.player.name == "p2"){
-    return Square.findByPosition(this.square.positionX + 1, this.square.positionY + 1)
-  }
-}
-
-Piece.prototype.jumpRight = function(){
-  if (this.player.name == "p1"){
-    return Square.findByPosition(this.square.positionX + 2, this.square.positionY - 2)
-  } else if (this.player.name == "p2"){
-    return Square.findByPosition(this.square.positionX + 2, this.square.positionY + 2)
-  }
-}
 
 
 Piece.prototype.leaveSquare = function(){
@@ -148,16 +200,3 @@ Piece.prototype.die = function() {
   this.leaveSquare();
   this.leaveGame();
 };
-
-Piece.prototype.jumpsAvailable = function(){
-  var jumps = []
-  if (this.left() && !this.left().empty() && (this.left().piece.player == this.player.opponent) && this.jumpLeft() && this.jumpLeft().empty()){
-    jumps.push(this.jumpLeft());
-
-  } else if (this.right() && !this.right().empty() && (this.right().piece.player == this.player.opponent) && this.jumpRight() && this.jumpRight().empty()){
-    jumps.push(this.jumpRight());
-  } else {
-    return false
-  }
-  return jumps
-}

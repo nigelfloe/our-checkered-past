@@ -12,6 +12,21 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require bootstrap
+//= require bootstrap-sprockets
 //= require_tree ../../../vendor/assets/javascripts/.
 //= require_tree .
+//= jquery-1.11.2.min.js
+//= jquery.easing.1.3.js
+//= require plugins/bootstrap.min
+//= require plugins/jquery.touchSwipe.min
+//= require plugins/jquery.placeholder
+//= require plugins/icheck.min
+//= require plugins/jquery.validate.min
+//= require plugins/gallery
+//= require plugins/jquery.fitvids
+//= require plugins/jquery.bxslider.min
+//= require plugins/chart
+//= require plugins/waypoints.min
+//= require plugins/smoothscroll
+//= require plugins/color-switcher
+//= require landing2

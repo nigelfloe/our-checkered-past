@@ -40,6 +40,9 @@ GEM
       builder
       multi_json
     arel (6.0.3)
+    autoprefixer-rails (6.0.3)
+      execjs
+      json
     bcrypt (3.1.10)
     better_errors (2.1.1)
       coderay (>= 1.0.0)
@@ -47,8 +50,9 @@ GEM
       rack (>= 0.9.0)
     binding_of_caller (0.7.2)
       debug_inspector (>= 0.0.1)
-    bootstrap-sass (3.1.1.1)
-      sass (~> 3.2)
+    bootstrap-sass (3.3.5.1)
+      autoprefixer-rails (>= 5.0.0.1)
+      sass (>= 3.3.0)
     builder (3.2.2)
     byebug (6.0.2)
     capybara (2.5.0)
@@ -88,6 +92,8 @@ GEM
       factory_girl (~> 4.5.0)
       railties (>= 3.0.0)
     ffi (1.9.10)
+    font-awesome-rails (4.4.0.0)
+      railties (>= 3.2, < 5.0)
     formatador (0.2.5)
     globalid (0.3.6)
       activesupport (>= 4.1.0)
@@ -261,13 +267,14 @@ DEPENDENCIES
   airbrake
   better_errors
   binding_of_caller
-  bootstrap-sass (~> 3.1.1)
+  bootstrap-sass (~> 3.3.5)
   byebug
   capybara
   coffee-rails (~> 4.1.0)
   database_cleaner
   devise
   factory_girl_rails
+  font-awesome-rails
   google-analytics-rails
   guard-rspec
   jbuilder (~> 2.0)
@@ -277,7 +284,7 @@ DEPENDENCIES
   rails (= 4.2.0)
   rails_12factor
   rspec-rails
-  sass-rails (~> 5.0)
+  sass-rails (>= 3.2)
   sdoc (~> 0.4.0)
   selenium-webdriver
   simplecov

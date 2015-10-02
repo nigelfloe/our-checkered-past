@@ -13,7 +13,7 @@ Turn.prototype.checkStalemate = function(){
     return piece.legalMoves().length > 0
   })
   if(piecesWithMoves.length == 0){
-    alert("Draw");
+    // alert("Draw");
   }
 }
 
@@ -53,6 +53,6 @@ Turn.prototype.squareChoiceListener = function(piece, turn){
 
 Turn.prototype.checkWin = function () {
   if(this.player.opponent.pieces().length === 0){
-    alert('YOU WON');
+    // alert('YOU WON');
   }
 };

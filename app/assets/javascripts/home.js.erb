@@ -49,9 +49,9 @@ function getPosition(square){
 }
 
 function updateInfoPanel(player){
-  $('.' + player.name + '-score').html(player.pieces().length);
-  $('.' + player.opponent.name + '-score').html(player.opponent.pieces().length);
+  $('.' + player.name + '-score').html("<h3>" + player.pieces().length + "</h3>");
+  $('.' + player.opponent.name + '-score').html("<h3>" + player.opponent.pieces().length + "</h3>");
   $('.' + player.name + '-panel').toggleClass('turn-marker');
   $('.' + player.opponent.name + '-panel').toggleClass('turn-marker');
-  $('.turn-count').html(Turn.all.length)
+  $('.turn-count').html("<h3>" + Turn.all.length + "</h3>")
 }

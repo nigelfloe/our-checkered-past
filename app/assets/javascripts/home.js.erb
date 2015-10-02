@@ -1,20 +1,20 @@
-// $(document).ready(function(){
-//   if (window.location.pathname == '/'){
-//     var player1 = new Player('p1')
-//     var player2 = new Player('p2')
-//     renderBoard();
-//     renderPieces(player1, player2);
-//     Player.opponents()
-//     player1.takesTurn();
-//   }
-// });
+$(document).ready(function(){
+  if (window.location.pathname == '/'){
+    var player1 = new Player('p1')
+    var player2 = new Player('p2')
+    renderBoard();
+    renderPieces(player1, player2);
+    Player.opponents()
+    player1.takesTurn();
+  }
+});
 
 function playGame(player1, player2){
   player1.takesTurn();
 }
 
 function renderBoard(){
-  $.makeArray($(".row")).forEach(function(row, y){
+  $.makeArray($(".board-row")).forEach(function(row, y){
     $(row).html(renderRow(row, y));
   });
 }

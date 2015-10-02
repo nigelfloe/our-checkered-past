@@ -1,83 +1,80 @@
-// * {
-//   box-sizing: border-box;
-//   -moz-box-sizing: border-box;
-//   -webkit-box-sizing: border-box;
+#page{
+  // width: 100%;
+  // height: 100%;
+  margin-top: 200px;
+  margin-bottom: 200px;
+}
+
+.square {
+  width: 80px;
+  height: 80px;
+  position: relative;
+  float: left;
+}
+
+.board-row {
+  clear: both;
+  min-width: 640px;
+}
+
+.off {
+  background-color: #80BCA3;
+}
+
+.on {
+  background-color: #655643;
+}
+
+.piece {
+  height: 72px;
+  width: 72px;
+  margin: 4px;
+  position: absolute;
+  z-index: 1;
+}
+
+.highlighted {
+  border: 4px #FC1104 solid;
+}
+
+.highlighted > .piece {
+  height: 71px;
+  width: 71px;
+  left: -3px;
+}
+
+// .p2-start .highlighted  > .piece {
+//   top: -2px;
+//   right: -2px;
 // }
 //
-// #page{
-//   width: 100%;
-//   height: 100%;
+// .p1-start .highlighted  > .piece {
+//   bottom: -2px;
+//   left: -2px;
 // }
-// .square {
-//   width: 100px;
-//   height: 100px;
-//   position: relative;
-//   float: left;
-// }
-//
-// .row {
-//   clear: both;
-//   min-width: 800px;
-// }
-//
-// .off {
-//   background-color: #80BCA3;
-// }
-//
-// .on {
-//   background-color: #655643;
-// }
-//
-// .piece {
-//   height: 90px;
-//   width: 90px;
-//   margin: 5px;
-//   position: absolute;
-//   z-index: 1;
-// }
-//
-// .highlighted {
-//   border: 4px #FC1104 solid;
-// }
-//
-// .highlighted > .piece {
-//   height: 89px;
-//   width: 89px;
-//   bottom: 1px;
-//   left: -3px;
-// }
-//
-// // .p2-start .highlighted  > .piece {
-// //   top: -2px;
-// //   right: -2px;
-// // }
-// //
-// // .p1-start .highlighted  > .piece {
-// //   bottom: -2px;
-// //   left: -2px;
-// // }
-//
-//
-//
-// .selected {
-//   background-color: #564939;
-//
-// }
-//
-// .turn-marker {
-//   color: #FC1104;
-// }
-//
-// .info-panel {
-//   float: left;
-//   position: relative;
-//   height: 100%;
-//   width: 20%;
-//   padding: 0 20px 0 20px;
-//   background-color: #F6F7BD;
-// }
-//
-// #board {
-//   float: left;
-//   position: relative;
-// }
+
+
+
+.selected {
+  background-color: #564939;
+
+}
+
+.turn-marker {
+  color: #FC1104;
+}
+
+.info-panel {
+  float: left;
+  position: relative;
+  height: 100%;
+  width: 20%;
+  padding: 0 20px 0 20px;
+  background-color: #F6F7BD;
+}
+
+#board {
+  border: 5px solid #564939;
+  float: left;
+  position: relative;
+}

@@ -9,7 +9,7 @@
     <%= javascript_include_tag :modernizr %>
 
     <meta charset="utf-8">
-    <title>Ultima - Ultimate HTM5 Landing Page v2.0</title>
+    <title>brgr chkrs</title>
     <meta name="description" content="Ultimate Responsive HTML5 Landing Page" />
 		<meta name="keywords" content="responsive html5 template, landing page, bootstrap 3.0, css, jquery" />
 		<meta name="author" content="8Guild" />
@@ -116,17 +116,19 @@
             <h4 class="modal-title">Login here</h4>
           </div>
           <div class="modal-body">
-            <form class="login-form" role="form">
+
+            <!-- maybe add placeholders for login form.... -->
+            <%= form_for :user, html: {class: "login-form", role: "form"}, url: user_session_path do |f| %>
               <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" class="form-control" id="username" placeholder="Enter Username" required>
+                <%= f.label :email %>
+                <%= f.text_field :email, class: 'form-control' %>
               </div>
               <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" class="form-control" id="password" placeholder="Enter Password" required>
+                <%= f.label :password %>
+                <%= f.password_field :password, class: 'form-control' %>
               </div>
-              <button type="submit" class="btn btn-primary">Login</button>
-            </form>
+              <%= f.submit "Login", class: "btn btn-primary" %>
+            <% end %>
           </div>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
@@ -143,7 +145,12 @@
           <span class="dot"></span><span class="line"></span>
           <span class="dot"></span><span class="line"></span>
         </div>
-        <a class="btn btn-primary btn-login" href="#" data-toggle="modal" data-target="#loginModal"><i class="icon-user"></i>Login</a>
+        <% if !current_user %>
+          <a class="btn btn-primary btn-login" href="/users/sign-in" data-toggle="modal" data-target="#loginModal"><i class="icon-user"></i>Login</a>
+        <% else %>
+          <%= button_to "Sign Out", destroy_user_session_path, method: 'delete', class: 'btn btn-primary btn-login'  %>
+          <!-- <a class="btn btn-primary btn-login" href="/users/sign-out"><i class="icon-user"></i>Sign Out</a> -->
+        <% end %>
         <nav class="main-navi">
         	<ul>
           	<li class="active"><a class="scroll-up" href="#">Home</a></li>

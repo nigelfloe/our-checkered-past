@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   devise_for :users
 
+
   root 'home#index' #landing page/sign up
 
   get '/game', to: 'game#index'

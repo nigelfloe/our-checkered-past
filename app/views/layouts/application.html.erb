@@ -26,40 +26,6 @@
       <script src="js/plugins/respond.min.js"></script>
       <script src="js/plugins/excanvas.js"></script>
     <![endif]-->
-    <!--Google Analytics-->
-    <script type="text/javascript">
-      var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', 'UA-46803427-2']);
-              _gaq.push(['_trackPageview']);
-      (function () {
-          var ga = document.createElement('script');
-          ga.type = 'text/javascript';
-          ga.async = true;
-          ga.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'stats.g.doubleclick.net/dc.js';
-
-          var s = document.getElementsByTagName('script')[0];
-          s.parentNode.insertBefore(ga, s);
-      })();
-    </script>
-
-    <!--Facebook Remarketing (Placed in <head>))-->
-    <script>(function() {
-      var _fbq = window._fbq || (window._fbq = []);
-      if (!_fbq.loaded) {
-        var fbds = document.createElement('script');
-        fbds.async = true;
-        fbds.src = '//connect.facebook.net/en_US/fbds.js';
-        var s = document.getElementsByTagName('script')[0];
-        s.parentNode.insertBefore(fbds, s);
-        _fbq.loaded = true;
-      }
-      _fbq.push(['addPixelId', '1491098954441261']);
-    })();
-    window._fbq = window._fbq || [];
-    window._fbq.push(['track', 'PixelInitialized', {}]);
-    </script>
-    <noscript><img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?id=1491098954441261&amp;ev=NoScript" /></noscript>
-
   </head>
 
   <!--Body-->
@@ -72,27 +38,15 @@
     <div class="light-skin modal fade" id="loginModal" tabindex="-1" role="form" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title">Login here</h4>
-          </div>
           <div class="modal-body">
 
+           <% if alert %>
+              <p class="alert alert-danger"><%= alert %></p>
+           <% end %>
             <!-- maybe add placeholders for login form.... -->
-            <%= form_for :user, html: {class: "login-form", role: "form"}, url: user_session_path do |f| %>
-              <div class="form-group">
-                <%= f.label :email %>
-                <%= f.text_field :email, class: 'form-control' %>
-              </div>
-              <div class="form-group">
-                <%= f.label :password %>
-                <%= f.password_field :password, class: 'form-control' %>
-              </div>
-              <%= f.submit "Login", class: "btn btn-primary" %>
-            <% end %>
-            <div class="sign-up">
-              <%= link_to "Create a new account", new_user_registration_path %>
-            </div>
+            <%= render partial: 'devise/sessions/new' %>
+            <%= render partial: 'devise/registrations/new' %>
+            <%= render partial: 'devise/passwords/new' %>
           </div>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
@@ -109,7 +63,7 @@
           <span class="dot"></span><span class="line"></span>
         </div>
         <% if !current_user %>
-          <a class="btn btn-primary btn-login" href="/users/sign-in" data-toggle="modal" data-target="#loginModal"><i class="icon-rocket"></i>Login</a>
+          <a class="btn btn-primary btn-login"  data-toggle="modal" data-target="#loginModal"><i class="icon-rocket"></i>Login</a>
         <% else %>
           <%= button_to "Sign Out", destroy_user_session_path, method: 'delete', class: 'btn btn-primary btn-login'  %>
           <!-- <a class="btn btn-primary btn-login" href="/users/sign-out"><i class="icon-user"></i>Sign Out</a> -->
@@ -118,26 +72,30 @@
         	<ul>
           	<li class="active"><a class="scroll-up" href="#">Home</a></li>
             <li class="has-dropdown"><a class="scroll" href="#features">Features<i class="fa fa-caret-down"></i></a>
-            	<ul class="dropdown">
+            	<!-- <ul class="dropdown">
               	<li><a href="#">Submenu Item</a></li>
                 <li><a href="#">Submenu Item</a></li>
                 <li><a href="#">Submenu Item</a></li>
                 <li><a href="#">Submenu Item</a></li>
-              </ul>
+              </ul> -->
             </li>
             <li class="has-dropdown"><a href="coming-soon.html">Coming soon<i class="fa fa-caret-down"></i></a>
-            	<ul class="dropdown">
+            	<!-- <ul class="dropdown">
               	<li><a href="#">Submenu Item</a></li>
                 <li><a href="#">Submenu Item</a></li>
                 <li><a href="#">Submenu Item</a></li>
-              </ul>
+              </ul> -->
             </li>
             <li><a href="cs-page.html">Components &amp; Styles</a></li>
           </ul>
         </nav>
       </div>
     </header>
-
+    <div class="superclassy">
+        <% if notice %>
+          <p class="alert alert-success fade in" id="login-success"><%= notice %></p>
+       <% end %>
+    </div>
     <!--Hero Unit-->
     <section class="hero grad">
     	<div class="container">

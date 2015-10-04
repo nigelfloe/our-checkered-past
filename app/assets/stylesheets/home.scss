@@ -2,6 +2,7 @@
   // width: 100%;
   // height: 100%;
   margin: 200px auto;
+  z-index: 100;
 }
 
 .square {
@@ -92,3 +93,23 @@
  background: -moz-radial-gradient(circle, #FF9D89, #e84427); /* Firefox 3.6 to 15 */
  background: radial-gradient(circle, #FF9D89, #e84427); /* Standard syntax */
 }
+
+.superclassy{
+  margin-top: 30px;
+  height: 50px;
+  width: 100%;
+  text-align: center;
+  float: left;
+  z-index: 100;
+}
+//
+// #login-success {
+//     width: 40%;
+//     text-align: center;
+//     margin: auto;
+//     left: 20%;
+//     top: 0px;
+//     height: 50px;
+//     position: absolute;
+//     // z-index: -1;
+// }

@@ -1,9 +1,12 @@
 var Board = function(turn){
+  this.turn = turn;
   this.turnNumber = turn.turnNumber;
   this.player = turn.player;
   this.getBoardState();
   Board.all.push(this);
 }
+
+
 
 Board.all = [];
 
@@ -33,3 +36,22 @@ Board.prototype.getUnsegmentedBoard = function() {
     }
   });
 };
+
+Board.prototype.displayBoardState = function(boardState){
+  Piece.all = [];
+  var newBoard = boardState.map(function(row, y){
+    row.map(function(square, x){
+      var squareToUpdate = Square.findByPosition(x, y);
+      if(square === 3 || square === 1){
+        new Piece(Player.all[0]).goToSquare(squareToUpdate);
+      } else if(square === 4 || square === 2){
+        new Piece(Player.all[1]).goToSquare(squareToUpdate);
+      } else if(square === 0){
+        if(squareToUpdate.piece){
+          squareToUpdate.piece.leaveSquare();
+        }
+      }
+    })
+  })
+  this.turn.player.opponent.takesTurn();
+}

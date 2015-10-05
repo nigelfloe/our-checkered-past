@@ -1,7 +1,7 @@
 var Turn = function(player){
   updateInfoPanel(player);
   this.player = player;
-  this.player.turn = this
+  this.player.turn = this;
   this.choosePieceListener();
   Turn.all.push(this);
 }
@@ -9,10 +9,10 @@ var Turn = function(player){
 Turn.all = [];
 
 Turn.prototype.checkStalemate = function(){
-  var piecesWithMoves = this.player.pieces().filter(function(piece){
+  var piecesWithMoves = this.player.pieces.filter(function(piece){
     return piece.legalMoves().length > 0
   })
-  if(piecesWithMoves.length == 0){
+  if(piecesWithMoves.length == 0 && Turn.all.length > 1){
     // alert("Draw");
   }
 }
@@ -56,7 +56,7 @@ Turn.prototype.end = function(){
 }
 
 Turn.prototype.checkWin = function () {
-  if(this.player.opponent.pieces().length === 0){
+  if(this.player.opponent.pieces.length === 0){
     alert('YOU WON');
   }
 };

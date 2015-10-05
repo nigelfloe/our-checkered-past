@@ -4,6 +4,8 @@ var Turn = function(player){
   this.player.turn = this;
   this.choosePieceListener();
   Turn.all.push(this);
+  this.turnNumber = Turn.all.length;
+  this.boardState = new Board(this);
 }
 
 Turn.all = [];

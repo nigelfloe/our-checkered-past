@@ -1,9 +1,11 @@
 var Turn = function(player){
+  debugger
   updateInfoPanel(player);
   this.player = player;
   this.checkStalemate();
   this.choosePieceListener();
   Turn.all.push(this);
+  // this.player.opponent.takesTurn();
 }
 
 Turn.all = [];
@@ -38,17 +40,24 @@ Turn.prototype.squareChoiceListener = function(piece, turn){
     e.stopPropagation();
     var piece = e.data.piece;
     var turn = e.data.turn;
+    // deselect piece
     $('.selected').toggleClass('selected');
     if(Square.findByJSquare($(this)).piece == piece){
       piece.toggleHighlight();
-      // piece.player.takesTurn();
       turn.choosePieceListener();
+    // move piece
     } else {
       piece.jumpOrSlide(Square.findByJSquare($(this)));
-      turn.checkWin();
-      piece.player.opponent.takesTurn();
+      // turn.checkWin();
+      debugger
+      // piece.player.opponent.takesTurn();
     }
   });
+}
+
+Turn.prototype.end = function(){
+  this.checkWin();
+  this.checkStalemate();
 }
 
 Turn.prototype.checkWin = function () {

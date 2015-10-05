@@ -9,10 +9,6 @@ $(document).ready(function(){
   }
 });
 
-function playGame(player1, player2){
-  player1.takesTurn();
-}
-
 function renderBoard(){
   $.makeArray($(".board-row")).forEach(function(row, y){
     $(row).html(renderRow(row, y));

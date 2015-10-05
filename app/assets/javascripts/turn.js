@@ -1,7 +1,7 @@
 var Turn = function(player){
   updateInfoPanel(player);
   this.player = player;
-  this.checkStalemate();
+  this.player.turn = this
   this.choosePieceListener();
   Turn.all.push(this);
 }
@@ -38,17 +38,21 @@ Turn.prototype.squareChoiceListener = function(piece, turn){
     e.stopPropagation();
     var piece = e.data.piece;
     var turn = e.data.turn;
+    // deselect piece
     $('.selected').toggleClass('selected');
     if(Square.findByJSquare($(this)).piece == piece){
       piece.toggleHighlight();
-      // piece.player.takesTurn();
       turn.choosePieceListener();
     } else {
       piece.jumpOrSlide(Square.findByJSquare($(this)));
-      turn.checkWin();
-      piece.player.opponent.takesTurn();
     }
   });
+}
+
+Turn.prototype.end = function(){
+  this.checkWin();
+  this.checkStalemate();
+  this.player.opponent.takesTurn()
 }
 
 Turn.prototype.checkWin = function () {

@@ -11,7 +11,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150928172939) do
+ActiveRecord::Schema.define(version: 20151005215110) do
+
+  create_table "boards", force: :cascade do |t|
+    t.string   "state"
+    t.integer  "turn"
+    t.integer  "player"
+    t.string   "legal_moves"
+    t.string   "best_move"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "", null: false

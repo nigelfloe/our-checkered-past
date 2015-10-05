@@ -6,8 +6,6 @@ var Board = function(turn){
   Board.all.push(this);
 }
 
-
-
 Board.all = [];
 
 // [0 = empty, 1= p1, 2= p2, 3= p1King, 4= p2King]
@@ -54,4 +52,16 @@ Board.prototype.displayBoardState = function(boardState){
     })
   })
   this.turn.player.opponent.takesTurn();
+}
+
+Board.prototype.sendToDatabase = function(){
+  $.ajax({
+    method: "POST",
+    url: "/boards",
+    data: {
+      state: this.boardState,
+      turn: this.turnNumber,
+      player: Player.all.indexOf(this.player)
+    }
+  })
 }

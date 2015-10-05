@@ -5,7 +5,7 @@ var Turn = function(player){
   this.choosePieceListener();
   Turn.all.push(this);
   this.turnNumber = Turn.all.length;
-  this.boardState = new Board(this);
+  this.board = new Board(this);
 }
 
 Turn.all = [];
@@ -54,10 +54,10 @@ Turn.prototype.squareChoiceListener = function(piece, turn){
 Turn.prototype.end = function(){
   this.checkWin();
   this.checkStalemate();
-  this.player.opponent.takesTurn()
-}
+  this.player.opponent.takesTurn();
+};
 
-Turn.prototype.checkWin = function () {
+Turn.prototype.checkWin = function(){
   if(this.player.opponent.pieces.length === 0){
     alert('YOU WON');
   }

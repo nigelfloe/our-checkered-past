@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :boards, only: [:create]
+
   devise_for :users, controllers: {
     sessions: 'users/sessions'
   }

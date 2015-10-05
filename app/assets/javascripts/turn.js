@@ -1,11 +1,9 @@
 var Turn = function(player){
-  debugger
   updateInfoPanel(player);
   this.player = player;
-  this.checkStalemate();
+  this.player.turn = this
   this.choosePieceListener();
   Turn.all.push(this);
-  // this.player.opponent.takesTurn();
 }
 
 Turn.all = [];
@@ -45,12 +43,8 @@ Turn.prototype.squareChoiceListener = function(piece, turn){
     if(Square.findByJSquare($(this)).piece == piece){
       piece.toggleHighlight();
       turn.choosePieceListener();
-    // move piece
     } else {
       piece.jumpOrSlide(Square.findByJSquare($(this)));
-      // turn.checkWin();
-      debugger
-      // piece.player.opponent.takesTurn();
     }
   });
 }
@@ -58,6 +52,7 @@ Turn.prototype.squareChoiceListener = function(piece, turn){
 Turn.prototype.end = function(){
   this.checkWin();
   this.checkStalemate();
+  this.player.opponent.takesTurn()
 }
 
 Turn.prototype.checkWin = function () {

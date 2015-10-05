@@ -103,11 +103,15 @@ Piece.prototype.jumpOrSlide = function(newSquare){
   if(this.jumps.indexOf(newSquare) >= 0){
     this.capturePiece(newSquare);
     this.move(newSquare);
-    this.doubleJumpHighlight();
-    //turn actually ends, wait for listeners
-    this.jumpAgain();
+    if(this.jumpsAvailable().length > 0){
+      this.doubleJumpHighlight();
+      this.jumpAgain();
+    } else {
+      this.player.turn.end()
+    }
   } else {
     this.move(newSquare);
+    this.player.turn.end()
   }
 };
 

@@ -1,10 +1,16 @@
 var Player = function(name){
-  this.name = name
-  this.opponent = null
+  this.name = name;
+  this.opponent = null;
   Player.all.push(this)
 }
 
-Player.all = []
+Player.all = [];
+
+Player.setAllPieces = function(){
+  Player.all.forEach(function(player){
+    player.setPieces();
+  });
+};
 
 Player.opponents = function(){
   Player.all[0].opponent = Player.all[1]
@@ -13,11 +19,12 @@ Player.opponents = function(){
 
 
 Player.prototype.takesTurn = function(){
-  new Turn(this)
+  Player.setAllPieces();
+  new Turn(this);
 }
 
-Player.prototype.pieces = function(){
-  return Piece.all.filter(function(piece){
+Player.prototype.setPieces = function(){
+  this.pieces = Piece.all.filter(function(piece){
     return piece.player == this
   }.bind(this))
 }

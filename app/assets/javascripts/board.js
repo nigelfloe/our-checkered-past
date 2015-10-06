@@ -44,11 +44,11 @@ Board.prototype.displayBoardState = function(boardState){
   var newBoard = boardState.map(function(row, y){
     row.map(function(square, x){
       var squareToUpdate = Square.findByPosition(x, y);
-      if(square === 3 || square === 1){
+      if(square == 3 || square == 1){
         new Piece(Player.all[0]).goToSquare(squareToUpdate);
-      } else if(square === 4 || square === 2){
+      } else if(square == 4 || square == 2){
         new Piece(Player.all[1]).goToSquare(squareToUpdate);
-      } else if(square === 0){
+      } else if(square == 0){
         if(squareToUpdate.piece){
           squareToUpdate.piece.leaveSquare();
         }
@@ -67,5 +67,8 @@ Board.prototype.sendToDatabase = function(){
       turn: this.turnNumber,
       player: Player.all.indexOf(this.player)
     }
-  })
+  }).done(function(message){
+    this.displayBoardState(JSON.parse(message));
+    // debugger
+  }.bind(this))
 }

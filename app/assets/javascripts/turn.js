@@ -54,6 +54,7 @@ Turn.prototype.squareChoiceListener = function(piece, turn){
 Turn.prototype.end = function(){
   this.checkWin();
   this.checkStalemate();
+  // this.board.sendToDatabase();
   this.player.opponent.takesTurn();
 };
 

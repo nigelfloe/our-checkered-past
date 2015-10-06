@@ -5,6 +5,6 @@ class BoardsController < ApplicationController
     else
       board = Board.create(state: params[:state].values, turn: params[:turn], player: params[:player])
     end
-    binding.pry
   end
+
 end

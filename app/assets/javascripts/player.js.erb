@@ -1,6 +1,7 @@
 var Player = function(name){
   this.name = name;
   this.opponent = null;
+  this.pieces;
   Player.all.push(this)
 }
 
@@ -15,6 +16,16 @@ Player.setAllPieces = function(){
 Player.opponents = function(){
   Player.all[0].opponent = Player.all[1]
   Player.all[1].opponent = Player.all[0]
+}
+
+Player.prototype.findAllMoves = function(){
+  var moves = [];
+  this.pieces.forEach(function(piece){
+    return piece.legalMoves().forEach(function(move){
+      moves.push([piece.square, move])
+    })
+  })
+  return moves;
 }
 
 

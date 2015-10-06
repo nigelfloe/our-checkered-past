@@ -8,9 +8,9 @@ var Board = function(turn){
 
 Board.all = [];
 
-// [0 = empty, 1= p1, 2= p2, 3= p1King, 4= p2King]
+// [0 = empty, 1= p1, 2= p2, 3= p1King, 4= p2King, -1= off-square]
 
-Board.prototype.getBoardState = function() {
+Board.prototype.getBoardState = function(){
   var segmentedBoard = [];
   var unsegmentedBoard = this.getUnsegmentedBoard();
   for(var i=0; i<8; i++){
@@ -19,9 +19,13 @@ Board.prototype.getBoardState = function() {
   this.boardState = segmentedBoard;
 };
 
-Board.prototype.getUnsegmentedBoard = function() {
+// Board.prototype.imagineFutureBoards
+
+Board.prototype.getUnsegmentedBoard = function(){
   return Square.all.map(function(square){
-    if(square.piece === null){
+    if(square.color === "off"){
+      return -1;
+    } else if(square.piece === null){
       return 0;
     } else if(square.piece.isKing && square.piece.player.name === 'p1'){
       return 3;

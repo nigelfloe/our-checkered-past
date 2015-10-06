@@ -8,9 +8,9 @@ var Board = function(turn){
 
 Board.all = [];
 
-// [0 = empty, 1= p1, 2= p2, 3= p1King, 4= p2King]
+// [0 = empty, 1= p1, 2= p2, 3= p1King, 4= p2King, -1= off-square]
 
-Board.prototype.getBoardState = function() {
+Board.prototype.getBoardState = function(){
   var segmentedBoard = [];
   var unsegmentedBoard = this.getUnsegmentedBoard();
   for(var i=0; i<8; i++){
@@ -19,9 +19,13 @@ Board.prototype.getBoardState = function() {
   this.boardState = segmentedBoard;
 };
 
-Board.prototype.getUnsegmentedBoard = function() {
+// Board.prototype.imagineFutureBoards
+
+Board.prototype.getUnsegmentedBoard = function(){
   return Square.all.map(function(square){
-    if(square.piece === null){
+    if(square.color === "off"){
+      return -1;
+    } else if(square.piece === null){
       return 0;
     } else if(square.piece.isKing && square.piece.player.name === 'p1'){
       return 3;
@@ -40,11 +44,11 @@ Board.prototype.displayBoardState = function(boardState){
   var newBoard = boardState.map(function(row, y){
     row.map(function(square, x){
       var squareToUpdate = Square.findByPosition(x, y);
-      if(square === 3 || square === 1){
+      if(square == 3 || square == 1){
         new Piece(Player.all[0]).goToSquare(squareToUpdate);
-      } else if(square === 4 || square === 2){
+      } else if(square == 4 || square == 2){
         new Piece(Player.all[1]).goToSquare(squareToUpdate);
-      } else if(square === 0){
+      } else if(square == 0){
         if(squareToUpdate.piece){
           squareToUpdate.piece.leaveSquare();
         }
@@ -63,5 +67,8 @@ Board.prototype.sendToDatabase = function(){
       turn: this.turnNumber,
       player: Player.all.indexOf(this.player)
     }
-  })
+  }).done(function(message){
+    this.displayBoardState(JSON.parse(message));
+    // debugger
+  }.bind(this))
 }

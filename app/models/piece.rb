@@ -49,22 +49,33 @@ class Piece
 
   def jumps_available
     jumps.select.with_index do |jump, index|
-      binding.pry
-      on_board?(slides[index]) && board.piece_by_coordinates(slides[index]) && is_opponent_piece?(slides[index]) && on_board?(jump) && !board.piece_by_coordinates(jump)
+      on_board?(slides[index]) && is_empty?(slides[index]) && is_opponent_piece?(slides[index]) && on_board?(jump) && !board.piece_by_coordinates(jump)
     end
   end
 
   def is_opponent_piece?(coordinates)
-    !!(opponent_pieces.include?(board.piece_by_coordinates(coordinates).type))
+    !!(opponent_pieces.include?(is_empty?(coordinates).type))
   end
 
   def on_board?(coordinates)
     !!(coordinates[0] > -1 && coordinates[0] < 8 && coordinates[1] > -1 && coordinates[1] < 8)
   end
 
+  def is_empty?(coordinates_array)
+    board.piece_by_coordinates(coordinates_array)
+  end
 
   def legal_moves
-
+    if board.pieces_with_jumps.include?(self)
+      return jumps_available.map{|jump| [coordinates, jump]}
+    elsif board.pieces_with_jumps.empty?
+      return slides.select{|slide| on_board?(slide) && !is_empty?(slide)}.map do |slide|
+        [coordinates, slide]
+      end
+    else
+      return []
+    end
   end
+
 
 end

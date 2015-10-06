@@ -7,8 +7,19 @@ class Board < ActiveRecord::Base
     set_pieces
   end
 
+  def all_legal_moves
+    players_pieces = pieces.select{|piece| piece.owner == player}
+    players_pieces.map{|piece| piece.legal_moves if piece.legal_moves.any?}.compact.flatten(1)
+  end
+
   def piece_by_coordinates(coordinates_array)
     pieces.select{|piece| piece.coordinates == coordinates_array}.first
+  end
+
+  def pieces_with_jumps
+    pieces.select do |piece|
+      piece.owner == player && piece.jumps_available.size > 0
+    end
   end
 
   def set_pieces

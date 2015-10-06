@@ -8,6 +8,12 @@ var Piece = function(player){
 
 Piece.all = [];
 
+Piece.piecesWithJumps = function(player){
+  return Piece.all.filter(function(piece){
+    return piece.jumpsAvailable().length > 0 && player == piece.player;
+  });
+};
+
 Piece.findOnClick = function(imageTag){
   var square = $(imageTag).parent();
   return Square.findByJSquare(square).piece;
@@ -49,11 +55,6 @@ Piece.prototype.legalMoves = function(){
   }
 };
 
-Piece.piecesWithJumps = function(player){
-  return Piece.all.filter(function(piece){
-    return piece.jumpsAvailable().length > 0 && player == piece.player;
-  });
-};
 
 Piece.prototype.jumpsAvailable = function(){
   return this.jumps.filter(function(jump, index){

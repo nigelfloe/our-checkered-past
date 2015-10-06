@@ -1,23 +1,33 @@
 class Piece
+  attr_reader :type, :owner
   attr_accessor :board, :coordinates
 
   def initialize(board, coordinates, type)
     @board = board
     @coordinates = coordinates
     @type = type
+    @owner = set_owner
+  end
+
+  def set_owner
+    type % 2 == 0 ? 1 : 0
+  end
+
+  def is_king?
+    !!(type > 2)
   end
 
   def opponent_pieces
-    board.player == 0 ? [2, 4] : [1, 3]
+    owner == 0 ? [2, 4] : [1, 3]
   end
 
   def slides
     arr = []
-    if player == 0 || board.coordinates_hash[coordinates] > 2
+    if owner == 0 || is_king?
       arr << [coordinates[0] - 1, coordinates[1] - 1]
       arr << [coordinates[0] + 1, coordinates[1] - 1]
     end
-    if player == 1 || board.coordinates_hash[coordinates] > 2
+    if owner == 1 || is_king?
       arr << [coordinates[0] - 1, coordinates[1] + 1]
       arr << [coordinates[0] + 1, coordinates[1] + 1]
     end
@@ -26,30 +36,35 @@ class Piece
 
   def jumps
     arr = []
-    if player == 0 || board.coordinates_hash[coordinates] > 2
+    if owner == 0 || board.coordinates_hash[coordinates] > 2
       arr << [coordinates[0] - 2, coordinates[1] - 2]
       arr << [coordinates[0] + 2, coordinates[1] - 2]
     end
-    if player == 1 || board.coordinates_hash[coordinates] > 2
+    if owner == 1 || board.coordinates_hash[coordinates] > 2
       arr << [coordinates[0] - 2, coordinates[1] + 2]
       arr << [coordinates[0] + 2, coordinates[1] + 2]
     end
     arr
   end
 
-  # def legal_moves
-  #
-  # end
-
   def jumps_available
     jumps.select.with_index do |jump, index|
-      slides[index] && slides[index] > 0 && (opponent_pieces.include?(slides[index])) && jump && jump == 0
+      binding.pry
+      on_board?(slides[index]) && board.piece_by_coordinates(slides[index]) && is_opponent_piece?(slides[index]) && on_board?(jump) && !board.piece_by_coordinates(jump)
     end
   end
 
-  # Piece.prototype.jumpsAvailable = function(){
-  #   return this.jumps.filter(function(jump, index){
-  #     return this.slides[index] && !this.slides[index].empty() && (this.slides[index].piece.player == this.player.opponent) && jump && jump.empty()
-  #   }.bind(this))
-  # }
+  def is_opponent_piece?(coordinates)
+    !!(opponent_pieces.include?(board.piece_by_coordinates(coordinates).type))
+  end
+
+  def on_board?(coordinates)
+    !!(coordinates[0] > -1 && coordinates[0] < 8 && coordinates[1] > -1 && coordinates[1] < 8)
+  end
+
+
+  def legal_moves
+
+  end
+
 end

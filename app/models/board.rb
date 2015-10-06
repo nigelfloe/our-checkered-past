@@ -1,23 +1,32 @@
 class Board < ActiveRecord::Base
-  attr_reader :pieces
+  attr_accessor :pieces
   validates_presence_of :state, :player
   serialize :state
   after_initialize do |board|
-    @pieces = coordinates_hash
-    binding.pry
+    @pieces = []
+    set_pieces
+  end
+
+  def piece_by_coordinates(coordinates_array)
+    pieces.select{|piece| piece.coordinates == coordinates_array}.first
+  end
+
+  def set_pieces
+    coordinates_hash.each do |coord, type|
+      @pieces << Piece.new(self, coord, type) if type > 0
+    end
+  end
+
+  def coordinates_hash
+    hash = {}
+    state.each_with_index {|row, y| row.each_with_index {|square, x| hash[[x, y].clone] = square.to_i}}
+    hash
   end
 
   def find_piece_coordinates
     player == 0 ? coordinates_hash.select{|k,v| v == "1" || v == "3"} : hash.select{|k,v| v == "2" || v == "4"}
   end
 
-  def coordinates_hash
-    hash = {}
-    state.each_with_index {|row, y| row.each_with_index {|square, x| hash[[x, y].clone] = square.to_i}}
-    hash.map do |coord, type|
-      Piece.new(self, coord, type)
-    end
-  end
 
   # def pieces_with_jumps
   #

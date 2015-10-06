@@ -1,9 +1,11 @@
 class Board < ActiveRecord::Base
-  attr_reader :coordinates_hash
+  attr_reader :pieces
   validates_presence_of :state, :player
   serialize :state
-
-# v % 2 != 0
+  after_initialize do |board|
+    @pieces = coordinates_hash
+    binding.pry
+  end
 
   def find_piece_coordinates
     player == 0 ? coordinates_hash.select{|k,v| v == "1" || v == "3"} : hash.select{|k,v| v == "2" || v == "4"}
@@ -12,7 +14,9 @@ class Board < ActiveRecord::Base
   def coordinates_hash
     hash = {}
     state.each_with_index {|row, y| row.each_with_index {|square, x| hash[[x, y].clone] = square.to_i}}
-    hash
+    hash.map do |coord, type|
+      Piece.new(self, coord, type)
+    end
   end
 
   # def pieces_with_jumps

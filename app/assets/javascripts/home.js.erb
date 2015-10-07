@@ -1,7 +1,7 @@
 $(document).ready(function(){
   if (window.location.pathname == '/'){
-    var player1 = new Player('p1')
-    var player2 = new Player('p2')
+    var player1 = new Player('p1', "human")
+    var player2 = new Player('p2', "computer")
     renderBoard();
     renderPieces(player1, player2);
     Player.opponents()

@@ -99,16 +99,9 @@ Board.prototype.sendToDatabase = function(){
         if (--i) {          // If i > 0, keep going
           theLoop(i);       // Call the loop again, and pass it the current value of i
         }
+        _that.turn.end()
       }, 500);
     })(msgCount);
-
-    // msg.forEach(function(move){
-    //   Board.displayBoardState(move)
-    //   consider(3000)
-    //   msgCount -= 1
-    //   if (msgCount == 0) { _that.turn.end(); }
-    // })
-
   })
 }
 

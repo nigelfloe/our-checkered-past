@@ -8,6 +8,10 @@ var Board = function(turn){
 
 Board.all = [];
 
+Board.current = function(){
+  return Board.all[Board.all.length - 1]
+}
+
 // [0 = empty, 1= p1, 2= p2, 3= p1King, 4= p2King, -1= off-square]
 
 Board.prototype.getBoardState = function(){
@@ -39,7 +43,7 @@ Board.prototype.getUnsegmentedBoard = function(){
   });
 };
 
-Board.prototype.displayBoardState = function(boardState){
+Board.displayBoardState = function(boardState){
   Piece.all = [];
   var newBoard = boardState.map(function(row, y){
     row.map(function(square, x){
@@ -58,6 +62,7 @@ Board.prototype.displayBoardState = function(boardState){
 }
 
 Board.prototype.sendToDatabase = function(){
+  var _that = this
   $.ajax({
     method: "POST",
     url: "/boards",
@@ -67,8 +72,26 @@ Board.prototype.sendToDatabase = function(){
       player: Player.all.indexOf(this.player)
     }
   }).done(function(message){
-    this.displayBoardState(JSON.parse(message));
-    // debugger
-    this.turn.end();
-  }.bind(this))
+    var msg = JSON.parse(message)
+    var msgCount = msg.length
+
+    var interval = setInterval(function(){
+      Board.displayBoardState(msg.shift());
+      if (!msg.length) {
+        clearInterval(interval);
+        _that.turn.end();
+      }
+    }, 3000)
+
+    // msg.forEach(function(move){
+    //   setTimeout(function(){
+    //     _that.displayBoardState(move)
+    //     // msgCount -= 1
+    //     // if (msgCount == 0) { _that.turn.end(); }
+    //   }, 1000)
+    //   setTimeout(function(){
+    //     _that.turn.end();
+    //   }, (1000*msgCount)+1000)
+    // })
+  })
 }

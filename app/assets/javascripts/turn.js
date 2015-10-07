@@ -57,13 +57,12 @@ Turn.prototype.squareChoiceListener = function(piece, turn){
       piece.toggleHighlight();
       turn.choosePieceListener();
     } else {
-      piece.jumpOrSlide(Square.findByJSquare($(this)));
+      piece.moveController(Square.findByJSquare($(this)));
     }
   });
 }
 
 Turn.prototype.end = function(){
-  // debugger
   this.checkWin();
   this.checkStalemate();
   this.player.opponent.takesTurn();

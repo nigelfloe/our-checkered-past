@@ -98,7 +98,7 @@ Piece.prototype.render = function(){
   }
 };
 
-Piece.prototype.jumpOrSlide = function(newSquare){
+Piece.prototype.moveController = function(newSquare){
     this.toggleHighlight();
   // was the last move a jump?
   if(this.jumps.indexOf(newSquare) >= 0){
@@ -129,13 +129,13 @@ Piece.prototype.jumpAgain = function() {
   this.square.jSquare().on('click', this, function(e){
     var piece = e.data;
     piece.square.jSquare().off();
-    //end turn
+    //deselect square
   });
   $('.highlighted').on('click', this, function(e){
     $('.highlighted').off();
     var piece = e.data;
     var square = Square.findByJSquare($(this));
-    piece.jumpOrSlide(square);
+    piece.moveController(square);
     //end turn
   })
 };

@@ -31,7 +31,7 @@ class Louis
   end
 
   def self.jump_again
-    @board.set_pieces
+    # @board.set_pieces
     jump_coordinates = @board.piece_by_coordinates([@finish_x, @finish_y]).jumps_available
     if jump_coordinates.length > 0
       @start_x = @finish_x

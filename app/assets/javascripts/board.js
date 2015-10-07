@@ -55,7 +55,6 @@ Board.prototype.displayBoardState = function(boardState){
       }
     })
   })
-  this.turn.player.opponent.takesTurn();
 }
 
 Board.prototype.sendToDatabase = function(){
@@ -70,5 +69,6 @@ Board.prototype.sendToDatabase = function(){
   }).done(function(message){
     this.displayBoardState(JSON.parse(message));
     // debugger
+    this.turn.end();
   }.bind(this))
 }

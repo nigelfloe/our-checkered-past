@@ -1,7 +1,8 @@
-var Player = function(name){
+var Player = function(name, species){
   this.name = name;
   this.opponent = null;
   this.pieces;
+  this.species = species
   Player.all.push(this)
 }
 

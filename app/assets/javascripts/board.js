@@ -8,6 +8,10 @@ var Board = function(turn){
 
 Board.all = [];
 
+Board.currentBoard = function(){
+  return Board.all[Board.all.length - 1]
+}
+
 // [0 = empty, 1= p1, 2= p2, 3= p1King, 4= p2King, -1= off-square]
 
 Board.prototype.getBoardState = function(){
@@ -71,4 +75,5 @@ Board.prototype.sendToDatabase = function(){
     this.displayBoardState(JSON.parse(message));
     // debugger
   }.bind(this))
+  this.player.opponent.takesTurn()
 }

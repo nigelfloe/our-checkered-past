@@ -31,7 +31,11 @@ Player.prototype.findAllMoves = function(){
 
 Player.prototype.takesTurn = function(){
   Player.setAllPieces();
-  new Turn(this);
+  if(this.name == 'p1'){
+    new Turn(this);
+  }else{
+    // Board.currentBoard().sendToDatabase();
+  }
 }
 
 Player.prototype.setPieces = function(){

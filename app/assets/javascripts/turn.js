@@ -1,14 +1,25 @@
 var Turn = function(player){
+  // debugger
   updateInfoPanel(player);
   this.player = player;
   this.player.turn = this;
-  this.choosePieceListener();
   Turn.all.push(this);
   this.turnNumber = Turn.all.length;
   this.board = new Board(this);
+  this.start()
 }
 
+
 Turn.all = [];
+
+Turn.prototype.start = function(){
+  // debugger
+  if (this.player.species == "human"){
+    this.choosePieceListener();
+  }else {
+    this.board.sendToDatabase();
+  }
+};
 
 Turn.prototype.checkStalemate = function(){
   var piecesWithMoves = this.player.pieces.filter(function(piece){
@@ -52,9 +63,10 @@ Turn.prototype.squareChoiceListener = function(piece, turn){
 }
 
 Turn.prototype.end = function(){
+  // debugger
   this.checkWin();
   this.checkStalemate();
-  // this.player.opponent.takesTurn();
+  this.player.opponent.takesTurn();
 };
 
 Turn.prototype.checkWin = function(){

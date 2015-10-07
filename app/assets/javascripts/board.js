@@ -8,7 +8,7 @@ var Board = function(turn){
 
 Board.all = [];
 
-Board.currentBoard = function(){
+Board.current = function(){
   return Board.all[Board.all.length - 1]
 }
 
@@ -43,7 +43,7 @@ Board.prototype.getUnsegmentedBoard = function(){
   });
 };
 
-Board.prototype.displayBoardState = function(boardState){
+Board.displayBoardState = function(boardState){
   Piece.all = [];
   var newBoard = boardState.map(function(row, y){
     row.map(function(square, x){
@@ -76,7 +76,7 @@ Board.prototype.sendToDatabase = function(){
     var msgCount = msg.length
 
     var interval = setInterval(function(){
-      _that.displayBoardState(msg.shift());
+      Board.displayBoardState(msg.shift());
       if (!msg.length) {
         clearInterval(interval);
         _that.turn.end();

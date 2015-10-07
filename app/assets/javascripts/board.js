@@ -49,9 +49,17 @@ Board.displayBoardState = function(boardState){
     row.map(function(square, x){
       var squareToUpdate = Square.findByPosition(x, y);
       if(square == 3 || square == 1){
-        new Piece(Player.all[0]).goToSquare(squareToUpdate);
+        var p1Piece = new Piece(Player.all[0])
+        if(square == 3){
+          p1Piece.kingMe()
+        }
+        p1Piece.goToSquare(squareToUpdate);
       } else if(square == 4 || square == 2){
-        new Piece(Player.all[1]).goToSquare(squareToUpdate);
+        var p2Piece = new Piece(Player.all[1])
+        if(square == 4){
+          p2Piece.kingMe()
+        }
+        p2Piece.goToSquare(squareToUpdate);
       } else if(square == 0){
         if(squareToUpdate.piece){
           squareToUpdate.piece.leaveSquare();

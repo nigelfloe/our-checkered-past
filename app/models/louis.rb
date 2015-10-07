@@ -17,13 +17,9 @@ class Louis
 
   def self.execute
     @piece_type = @board.state[@start_y][@start_x]
-    @board.state[@finish_y][@finish_x] = @piece_type
+    @board.state[@finish_y][@finish_x] = (@finish_y == 7 ? "4" : @piece_type)
     @board.state[@start_y][@start_x] = "0"
-    if (@start_x - @finish_x).abs == 2
-      jump
-    else
-      @moves << @board.state
-    end
+    (@start_x - @finish_x).abs == 2 ? jump : @moves << @board.state
     @moves
   end
 

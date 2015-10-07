@@ -70,6 +70,13 @@ Board.displayBoardState = function(boardState){
 }
 
 Board.prototype.sendToDatabase = function(){
+  var consider = function(dur) {
+    var d = new Date().getTime() + dur;
+    while(new Date().getTime() <= d ) {
+    //Do nothing
+    }
+  }
+
   var _that = this
   $.ajax({
     method: "POST",
@@ -80,26 +87,35 @@ Board.prototype.sendToDatabase = function(){
       player: Player.all.indexOf(this.player)
     }
   }).done(function(message){
+    // debugger
     var msg = JSON.parse(message)
-    var msgCount = msg.length
+    // debugger
+    var msgCount = msg.length;
 
-    var interval = setInterval(function(){
-      Board.displayBoardState(msg.shift());
-      if (!msg.length) {
-        clearInterval(interval);
-        _that.turn.end();
-      }
-    }, 3000)
+    (function theLoop(i) {
+      setTimeout(function () {
+        // alert('hello')
+        Board.displayBoardState(msg[msgCount - i]);
+        if (--i) {          // If i > 0, keep going
+          theLoop(i);       // Call the loop again, and pass it the current value of i
+        }
+      }, 500);
+    })(msgCount);
 
     // msg.forEach(function(move){
-    //   setTimeout(function(){
-    //     _that.displayBoardState(move)
-    //     // msgCount -= 1
-    //     // if (msgCount == 0) { _that.turn.end(); }
-    //   }, 1000)
-    //   setTimeout(function(){
-    //     _that.turn.end();
-    //   }, (1000*msgCount)+1000)
+    //   Board.displayBoardState(move)
+    //   consider(3000)
+    //   msgCount -= 1
+    //   if (msgCount == 0) { _that.turn.end(); }
     // })
+
   })
 }
+
+// var interval = setInterval(function(){
+  // Board.displayBoardState(msg.shift());
+  // if (!msg.length) {
+  //   clearInterval(interval);
+  //   _that.turn.end();
+  // }
+// }, 3000)

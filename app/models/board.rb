@@ -3,7 +3,6 @@ class Board < ActiveRecord::Base
   validates_presence_of :state, :player
   serialize :state
   after_initialize do |board|
-    @pieces = []
     set_pieces
   end
 
@@ -23,6 +22,7 @@ class Board < ActiveRecord::Base
   end
 
   def set_pieces
+    @pieces = []
     coordinates_hash.each do |coord, type|
       @pieces << Piece.new(self, coord, type) if type > 0
     end

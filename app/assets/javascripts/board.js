@@ -62,6 +62,7 @@ Board.prototype.displayBoardState = function(boardState){
 }
 
 Board.prototype.sendToDatabase = function(){
+  var _that = this
   $.ajax({
     method: "POST",
     url: "/boards",
@@ -71,9 +72,26 @@ Board.prototype.sendToDatabase = function(){
       player: Player.all.indexOf(this.player)
     }
   }).done(function(message){
-    this.displayBoardState(JSON.parse(message));
-    // debugger
-    this.turn.end();
-  }.bind(this))
-  this.player.opponent.takesTurn()
+    var msg = JSON.parse(message)
+    var msgCount = msg.length
+
+    var interval = setInterval(function(){
+      _that.displayBoardState(msg.shift());
+      if (!msg.length) {
+        clearInterval(interval);
+        _that.turn.end();
+      }
+    }, 3000)
+
+    // msg.forEach(function(move){
+    //   setTimeout(function(){
+    //     _that.displayBoardState(move)
+    //     // msgCount -= 1
+    //     // if (msgCount == 0) { _that.turn.end(); }
+    //   }, 1000)
+    //   setTimeout(function(){
+    //     _that.turn.end();
+    //   }, (1000*msgCount)+1000)
+    // })
+  })
 }

@@ -89,7 +89,6 @@ Board.prototype.sendToDatabase = function(){
   }).done(function(message){
     // debugger
     var msg = JSON.parse(message)
-    // debugger
     var msgCount = msg.length;
 
     (function theLoop(i) {

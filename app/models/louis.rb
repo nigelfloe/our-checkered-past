@@ -1,65 +1,43 @@
 class Louis
-  attr_accessor :board, :moves, :start_x, :start_y, :finish_x, :finish_y, :piece_type, :board_state
+  P1_GUARD_ROW = 7
+  LOUIS_GUARD_ROW = 0
+  OFF_SQUARE = "-1"
+  EMPTY_SQUARE = "0"
+  P1_PIECE = "1"
+  LOUIS_PIECE = "2"
+  P1_KING = "3"
+  LOUIS_KING = "4"
 
-  def self.evaluate_board(board_state, legal_moves)
+  def evaluate_board(board_state)
+    current_state = board_state.flatten
+    p1_pieces = current_state.select {|s| s == P1_PIECE}.count
+    p1_kings = current_state.select {|s| s == P1_KING}.count
+    p1_guards = board_state[P1_GUARD_ROW].select{|s| s == P1_PIECE}.count
+
+    louis_pieces = current_state.select {|s| s == LOUIS_PIECE}.count
+    louis_kings = current_state.select {|s| s == LOUIS_KING}.count
+    louis_guards = board_state[LOUIS_GUARD_ROW].select{|s| s == LOUIS_PIECE}.count
+
+    p1_score = (p1_pieces * 2) + (p1_kings * 5) + p1_guards
+    louis_score = (louis_pieces * 2) + (louis_kings * 5) + louis_guards
+
+    board_score = louis_score - p1_score
   end
 
-  def initialize()
-    @moves = []
-  end
-
-  def move(original_board)
-    @board = original_board
-    @board_state = @board.state
-    move_coordinates = @board.all_legal_moves.sample
-    @start_x = move_coordinates[0][0].to_i
-    @start_y = move_coordinates[0][1].to_i
-    @finish_x = move_coordinates[1][0].to_i
-    @finish_y = move_coordinates[1][1].to_i
-    @piece_type = @board_state[start_y][start_x]
-    execute
-  end
-
-  def execute
-    # binding.pry
-    if finish_y == 7
-      # binding.pry
-      @piece_type = "4"
-      # @board_state[finish_y][finish_x] = "4"
+  def choose(board)
+    choices = board.all_legal_moves.map do |coord_pair|
+      board_copy = Board.new(state: board.state, player: board.player)
+      Move.new(board_copy, coord_pair).execute
     end
-    @board_state[finish_y][finish_x] = piece_type
-    # binding.pry
-    @board_state[start_y][start_x] = "0"
-    # binding.pry
-    (start_x - finish_x).abs == 2 ? jump : push_move
-    # binding.pry
-    moves
-  end
-
-  def push_move
-    move = @board_state.deep_dup
-    moves.push(move)
-  end
-
-  def jump
-    @board_state[(start_y + finish_y)/2][(start_x + finish_x)/2] = "0"
-    push_move
-    # board.set_pieces
-    jump_again
-  end
-
-  def jump_again
-    @board.set_pieces
-    jump_coordinates = @board.piece_by_coordinates([finish_x, finish_y]).jumps_available
-    if jump_coordinates.length > 0
-
-      start_x = finish_x
-      start_y = finish_y
-      finish_x = jump_coordinates[0][0]
-      finish_y = jump_coordinates[0][1]
-
-      self.move(@board)
+    choices.sort_by! do |possible_move|
+      evaluate_board(possible_move.last)
     end
+    best_choices = choices.select do |possible_move|
+      evaluate_board(possible_move.last) == evaluate_board(choices.last.last)
+    end
+    best_choices.sample
   end
+
+
 
 end

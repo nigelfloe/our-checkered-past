@@ -22,7 +22,7 @@ class Louis
     louis_score = (louis_pieces * 2) + (louis_kings * 5) + louis_guards
 
     board_score = louis_score - p1_score
-  end-
+  end
 
   def choose(board)
     choices = board.all_legal_moves.map do |coord_pair|

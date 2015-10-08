@@ -31,7 +31,6 @@ class Louis
     elsif player == P1
       board_score = p1_score - louis_score
     end
-
   end
 
   def choose(board)

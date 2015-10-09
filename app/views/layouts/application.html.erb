@@ -10,9 +10,9 @@
 
     <meta charset="utf-8">
     <title>brgr chkrs</title>
-    <meta name="description" content="Ultimate Responsive HTML5 Landing Page" />
-		<meta name="keywords" content="responsive html5 template, landing page, bootstrap 3.0, css, jquery" />
-		<meta name="author" content="8Guild" />
+    <meta name="description" content="checkers with burgers!" />
+		<meta name="keywords" content="checkers, burgers" />
+		<meta name="author" content="Diane Cai, Nancy Hawa, David Rowe" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <!--Favicon-->
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
@@ -55,7 +55,7 @@
     <!--Header-->
     <header class="stiky-header">
     	<div class="container group">
-      	<a class="logo" href="index.html"><%=image_tag('king-burger-1', size:"90x90")%> </a>
+      	<a class="logo" href="#home"><%=image_tag('king-burger-1', size:"70x70")%> </a>
         <div class="navi-toggle group">
         	<span class="dot"></span><span class="line"></span>
           <span class="dot"></span><span class="line"></span>
@@ -71,7 +71,7 @@
         <nav class="main-navi">
         	<ul>
           	<li class="active"><a class="scroll-up" href="#">Home</a></li>
-            <li class="has-dropdown"><a class="scroll" href="#features">Features<i class="fa fa-caret-down"></i></a>
+            <li class="has-dropdown"><a class="scroll" href="#leaderboard">Leaderboard</a>
             	<!-- <ul class="dropdown">
               	<li><a href="#">Submenu Item</a></li>
                 <li><a href="#">Submenu Item</a></li>
@@ -79,26 +79,26 @@
                 <li><a href="#">Submenu Item</a></li>
               </ul> -->
             </li>
-            <li class="has-dropdown"><a href="coming-soon.html">Coming soon<i class="fa fa-caret-down"></i></a>
+            <li class="has-dropdown"><a href="#profile">Profile</a>
             	<!-- <ul class="dropdown">
               	<li><a href="#">Submenu Item</a></li>
                 <li><a href="#">Submenu Item</a></li>
                 <li><a href="#">Submenu Item</a></li>
               </ul> -->
             </li>
-            <li><a href="cs-page.html">Components &amp; Styles</a></li>
+            <li><a href="#faq">FAQ</a></li>
           </ul>
         </nav>
       </div>
     </header>
-    <div class="superclassy">
+    <div class="notification">
         <% if notice %>
           <p class="alert alert-success fade in" id="login-success"><%= notice %></p>
        <% end %>
     </div>
     <!--Hero Unit-->
     <section class="hero grad">
-    	<div class="container">
+    	<div class="container board-div">
           <%= yield %>
       </div>
     </section><!--Close Hero-->

@@ -169,4 +169,5 @@ Piece.prototype.leaveGame = function() {
 Piece.prototype.die = function() {
   this.leaveSquare();
   this.leaveGame();
+  this.player.setPieces();
 };

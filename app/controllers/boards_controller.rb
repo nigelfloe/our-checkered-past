@@ -6,7 +6,7 @@ class BoardsController < ApplicationController
       board = Board.create(state: params[:state].values, turn: params[:turn], player: params[:player])
     end
     respond_to do |format|
-      format.js {render json: Louis.new.choose(board).to_json.html_safe}
+      format.js {render json: Louis.new.choose(board.state, 2, 1).to_json.html_safe}
     end
   end
 

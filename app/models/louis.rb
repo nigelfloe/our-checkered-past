@@ -1,5 +1,5 @@
 class Louis
-  attr_accessor :player
+  attr_accessor :player, :checked_move
   P1 = 0
   LOUIS = 1
   P1_GUARD_ROW = 7
@@ -31,6 +31,7 @@ class Louis
     elsif player == P1
       board_score = p1_score - louis_score
     end
+    board_score
   end
 
   def determine_choices(opponent_choices_array, player)
@@ -43,27 +44,68 @@ class Louis
     (player - 1).abs
   end
 
-  def choose(board_state, counter, player, choices_hash)
-    unless counter == 0
-      player_choices = choices_array(board_state, player)
+  # def choose(board_state, counter, player, choices_hash={})
+  #   player_choices = choices_array(board_state, player)
+  #
+  #   player_choices.each do |choice|
+  #     opponent_responses = choices_array(choice.last, opponent(player))
+  #     opponent_responses.each do |response|
+  #       if counter == 1
+  #         choices_hash[choice] = evaluate_board(response.flatten(1), LOUIS)
+  #       else
+  #         choices_hash[choice] = choose(response.flatten(1), counter-1, opponent(player), choices_hash)
+  #       end
+  #     end
+  #   end
+  #   # binding.pry
+  #   choices_hash
+  # end
 
-      player_choices.each do |choice|
-        binding.pry
-        opponent_responses = choices_array(choice.last, opponent(player))
-        binding.pry
-        choices_hash[choice] = opponent_responses.map do |response|
-          binding.pry
-          if counter == 1
-            evaluate_board(response, LOUIS)
-          else
-            choose(response, counter-1, opponent(player), choices_hash)
-          end
-        end
-      end
+  def minimax(node_board_state, depth, player)
+    initial_depth ||= depth
+    counter ||= 0
+    if depth == 0
+      return evaluate_board(node_board_state, player)
     end
-    choices_hash
+    if player == LOUIS
+      bottom_value = -1000
+      best_value = -1000
+      choices_array(node_board_state, LOUIS).each do |possible_move|
+        val = minimax(possible_move.last, depth - 1, P1)
+        best_value = [best_value, val].max
+      end
+      if best_value > bottom_value && depth == initial_depth
+        bottom_value = best_value
+        @checked_move = choices_array(node_board_state, LOUIS)[counter]
+        # @checked_move = possible_move
+        counter += 1
+      end
+      best_value
+    else
+      top_value = 1000
+      best_value = 1000
+      choices_array(node_board_state, P1).each do |possible_move|
+        val = minimax(possible_move.last, depth - 1, LOUIS)
+        best_value = [best_value, val].min
+      end
+      if best_value < top_value && depth == initial_depth
+        top_value = best_value
+        @checked_move = choices_array(node_board_state, P1)[counter]
+        # @checked_move = possible_move
+      end
+      best_value
+    end
   end
 
+  def choose(node_board_state, depth, player)
+    minimax(node_board_state, depth, player)
+    @checked_move
+  end
+
+  def anything(board_state, player)
+    minimax(possible_move, depth, player)
+    array
+  end
   # def decide(board)
   #   choose(board, 4, LOUIS).each do |louis_move, p1_responses|
   #     p1_responses.sort_by! do |response|

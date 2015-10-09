@@ -1,5 +1,4 @@
 var Turn = function(player){
-  // debugger
   updateInfoPanel(player);
   this.player = player;
   this.player.turn = this;
@@ -9,12 +8,11 @@ var Turn = function(player){
   this.start()
 }
 
-
 Turn.all = [];
 
 Turn.prototype.start = function(){
-  // debugger
   if (this.player.species == "human"){
+    this.checkLose();
     this.choosePieceListener();
   }else {
     this.board.sendToDatabase();
@@ -70,6 +68,12 @@ Turn.prototype.end = function(){
 
 Turn.prototype.checkWin = function(){
   if(this.player.opponent.pieces.length === 0){
-    alert('YOU WON');
+    $('#winModal').modal('show');
+  }
+};
+
+Turn.prototype.checkLose = function(){
+  if(this.player.pieces.length === 0){
+    $('#loseModal').modal('show');
   }
 };

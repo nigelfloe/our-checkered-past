@@ -47,7 +47,9 @@ class Louis
         evaluate_board(response.last, LOUIS)
       end
       #select p1's best response
-      game_tree[louis_move] = evaluate_board(p1_responses.first.last, LOUIS)
+      unless p1_responses.empty?
+        game_tree[louis_move] = evaluate_board(p1_responses.first.last, LOUIS)
+      end
     end
 
 

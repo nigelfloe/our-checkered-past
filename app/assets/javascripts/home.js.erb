@@ -4,7 +4,7 @@ $(document).ready(function(){
     var player2 = new Player('p2', "computer")
     renderBoard();
     renderPieces(player1, player2);
-    Player.opponents()
+    Player.opponents();
     player1.takesTurn();
   }
 });
@@ -39,7 +39,6 @@ function renderPieces(player1, player2){
 }
 
 
-
 function getPosition(square){
   return square.attr('position').split(',').map(Number);
 }
@@ -50,8 +49,5 @@ function updateInfoPanel(player){
   $('.' + player.name + '-panel').toggleClass('turn-marker');
   $('.' + player.opponent.name + '-panel').toggleClass('turn-marker');
   $('.turn-count').html("<h3>" + Turn.all.length + "</h3>");
-  // var timer = new Timer;
-  // debugger;
-  // var count = setInterval(timer.countDown, 500);
   var count = setInterval(countDown, 500);
 }

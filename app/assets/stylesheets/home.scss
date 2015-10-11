@@ -7,7 +7,7 @@
     width: 640px;
   }
 
-  #poop{
+  #board-div{
     width: 640px;
   }
 
@@ -15,7 +15,7 @@
 
 
 @media screen and (min-width: 1676px){
-  #poop {
+  #board-div {
     float: left;
   }
 }
@@ -37,7 +37,7 @@
   background-color: blue;
 }
 
-#poop{
+#board-div{
   width: 70%;
 }
 .grad {
@@ -133,7 +133,7 @@
 
 
 .notification{
-  // margin-top: 10px;
+  // margin-top: 10%;
   height: 30px;
   width: 100%;
   text-align: center;
@@ -148,7 +148,7 @@
     padding: 0;
   }
 
-  #poop {
+  #board-div {
     width: 700px;
     display: block;
     margin: auto;

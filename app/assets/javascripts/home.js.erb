@@ -49,5 +49,9 @@ function updateInfoPanel(player){
   $('.' + player.opponent.name + '-score').html("<h3>" + player.opponent.pieces.length + "</h3>");
   $('.' + player.name + '-panel').toggleClass('turn-marker');
   $('.' + player.opponent.name + '-panel').toggleClass('turn-marker');
-  $('.turn-count').html("<h3>" + Turn.all.length + "</h3>")
+  $('.turn-count').html("<h3>" + Turn.all.length + "</h3>");
+  // var timer = new Timer;
+  // debugger;
+  // var count = setInterval(timer.countDown, 500);
+  var count = setInterval(countDown, 500);
 }

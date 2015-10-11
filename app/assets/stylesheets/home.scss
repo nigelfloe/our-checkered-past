@@ -56,7 +56,6 @@
 
 .square {
   width: 12.5%;
-  // height: 12%;
   position: relative;
   float: left;
   padding: 6% 0;
@@ -76,9 +75,7 @@
 }
 
 .piece {
-  // height: 90%;
   width: 87%;
-  // padding: -6% 0;
   margin-top: -45%;
   margin-bottom: -45%;
   margin-left: 5%;
@@ -88,12 +85,10 @@
 
 .highlighted {
   border: 4px #FC1104 solid;
-  padding: 5.5%;
+  padding: 5.4%;
 }
 
 .highlighted > .piece {
-  // height: 71px;
-  // width: 71px;
   left: -1px;
 }
 
@@ -183,6 +178,10 @@
 
   #page .turn{
     padding: 0%;
+  }
+
+  #page .timer{
+    padding-top: 15%;
   }
 
 }

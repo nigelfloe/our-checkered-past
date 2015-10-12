@@ -22,7 +22,7 @@ Square.findByJSquare = function(selection){
 };
 
 Square.prototype.render = function(){
-  return "<div class='" + this.color + " square' x='" + this.positionX + "' y='" + this.positionY + "' position='" + this.position + "'></div>";
+  return "<div class='" + this.color + " square clearfix' x='" + this.positionX + "' y='" + this.positionY + "' position='" + this.position + "'></div>";
 };
 
 Square.prototype.jSquare = function(){

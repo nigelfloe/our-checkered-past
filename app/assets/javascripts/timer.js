@@ -9,7 +9,7 @@ var countDown = function(){
   } else if(secondsLeft >= 0){
     $('.timer').html("<h3>00:0" + secondsLeft + "</h3>");
   } else {
-    $('.timer').html("<h3>TIME UP</h3>");
+    $('.timer').html("<h3>HURRY UP</h3>");
     clearInterval(count);
   }
 }

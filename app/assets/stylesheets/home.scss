@@ -1,5 +1,4 @@
 @media screen and (max-width: 875px){
-
 }
 
 @media screen and (max-width: 1500px){
@@ -10,7 +9,6 @@
   #board-div{
     width: 640px;
   }
-
 }
 
 
@@ -18,6 +16,22 @@
   #board-div {
     float: left;
   }
+}
+
+.endgame{
+  text-align: center;
+}
+
+button[name="new-game"]{
+  margin-top: 30px;
+}
+
+button[name="new-game"] > a{
+  color: #fff;
+}
+
+.gif{
+  margin: auto;
 }
 
 #page{
@@ -183,5 +197,4 @@
   #page .timer{
     padding-top: 15%;
   }
-
 }

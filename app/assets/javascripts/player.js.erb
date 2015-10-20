@@ -2,8 +2,8 @@ var Player = function(name, species){
   this.name = name;
   this.opponent = null;
   this.pieces;
-  this.species = species
-  Player.all.push(this)
+  this.species = species;
+  Player.all.push(this);
 }
 
 Player.all = [];
@@ -15,8 +15,8 @@ Player.setAllPieces = function(){
 };
 
 Player.opponents = function(){
-  Player.all[0].opponent = Player.all[1]
-  Player.all[1].opponent = Player.all[0]
+  Player.all[0].opponent = Player.all[1];
+  Player.all[1].opponent = Player.all[0];
 }
 
 Player.prototype.findAllMoves = function(){
@@ -38,5 +38,5 @@ Player.prototype.takesTurn = function(){
 Player.prototype.setPieces = function(){
   this.pieces = Piece.all.filter(function(piece){
     return piece.player == this
-  }.bind(this))
+  }.bind(this));
 }

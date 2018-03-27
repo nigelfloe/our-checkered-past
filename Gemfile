@@ -58,7 +58,7 @@ group :test, :development do
 end
 
 group :production do
-  gem 'pg'
+  gem 'pg', '~> 0.21'
   gem 'google-analytics-rails'
   gem 'rails_12factor'
 end
